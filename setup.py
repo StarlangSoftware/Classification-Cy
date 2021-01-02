@@ -41,7 +41,7 @@ setup(
     url='https://github.com/olcaytaner/Classification-Cy',
     license='',
     author='olcaytaner',
-    author_email='olcaytaner@isikun.edu.tr',
+    author_email='olcay.yildiz@ozyegin.edu.tr',
     description='Classification library',
     install_requires=['NlpToolkit-Math-Cy', 'NlpToolkit-DataStructure-Cy', 'NlpToolkit-Sampling-Cy']
 )
