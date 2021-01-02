@@ -38,7 +38,7 @@ setup(
                   'Classification.DistanceMetric': ['*.pxd', '*.pyx', '*.c', '*.py'],
                   'Classification.StatisticalTest': ['*.pxd', '*.pyx', '*.c', '*.py'],
                   'Classification.FeatureSelection': ['*.pxd', '*.pyx', '*.c', '*.py']},
-    url='https://github.com/olcaytaner/Classification-Cy',
+    url='https://github.com/StarlangSoftware/Classification-Cy',
     license='',
     author='olcaytaner',
     author_email='olcay.yildiz@ozyegin.edu.tr',
