@@ -1,5 +1,4 @@
 from Classification.Instance.CompositeInstance cimport CompositeInstance
-from Classification.Instance.Instance cimport Instance
 from Classification.Performance.ClassificationPerformance cimport ClassificationPerformance
 
 
@@ -36,6 +35,9 @@ cdef class DecisionTree(ValidatedModel):
         if predictedClass is None and isinstance(instance, CompositeInstance):
             predictedClass = instance.getPossibleClassLabels()
         return predictedClass
+
+    cpdef dict predictProbability(self, Instance instance):
+        return self.__root.predictProbabilityDistribution(instance)
 
     cpdef pruneNode(self, DecisionNode node, InstanceList pruneSet):
         """

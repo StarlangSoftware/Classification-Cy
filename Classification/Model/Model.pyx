@@ -19,6 +19,9 @@ cdef class Model(object):
         """
         pass
 
+    cpdef dict predictProbability(self, Instance instance):
+        pass
+
     @staticmethod
     def getMaximum(classLabels: list) -> str:
         """

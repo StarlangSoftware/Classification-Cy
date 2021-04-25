@@ -7,3 +7,4 @@ cdef class RandomModel(Model):
     cdef list __classLabels
 
     cpdef str predict(self, Instance instance)
+    cpdef dict predictProbability(self, Instance instance)

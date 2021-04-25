@@ -11,4 +11,5 @@ cdef class KnnModel(Model):
     cdef DistanceMetric __distanceMetric
 
     cpdef str predict(self, Instance instance)
+    cpdef dict predictProbability(self, Instance instance)
     cpdef InstanceList nearestNeighbors(self, Instance instance)

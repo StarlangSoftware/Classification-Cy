@@ -1,5 +1,4 @@
 from Math.DiscreteDistribution cimport DiscreteDistribution
-from Classification.Instance.Instance cimport Instance
 
 
 cdef class TreeEnsembleModel(Model):
@@ -36,3 +35,9 @@ cdef class TreeEnsembleModel(Model):
         for tree in self.__forest:
             distribution.addItem(tree.predict(instance))
         return distribution.getMaxItem()
+
+    cpdef dict predictProbability(self, Instance instance):
+        distribution = DiscreteDistribution()
+        for tree in self.__forest:
+            distribution.addItem(tree.predict(instance))
+        return distribution.getProbabilityDistribution()

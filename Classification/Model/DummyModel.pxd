@@ -8,3 +8,4 @@ cdef class DummyModel(Model):
     cdef DiscreteDistribution distribution
 
     cpdef str predict(self, Instance instance)
+    cpdef dict predictProbability(self, Instance instance)

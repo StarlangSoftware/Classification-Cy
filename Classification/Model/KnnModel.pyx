@@ -47,6 +47,11 @@ cdef class KnnModel(Model):
             predictedClass = Model.getMaximum(nearestNeighbors.getClassLabels())
         return predictedClass
 
+    cpdef dict predictProbability(self, Instance instance):
+        cdef InstanceList nearestNeighbors
+        nearestNeighbors = self.nearestNeighbors(instance)
+        return nearestNeighbors.classDistribution().getProbabilityDistribution()
+
     def makeComparator(self):
         def compare(instanceA: KnnInstance, instanceB: KnnInstance):
             if instanceA.distance < instanceB.distance:

@@ -20,3 +20,4 @@ cdef class NeuralNetworkModel(ValidatedModel):
     cpdef Vector calculateRMinusY(self, Instance instance, Vector inputVector, Matrix weights)
     cpdef str predictWithCompositeInstance(self, list possibleClassLabels)
     cpdef str predict(self, Instance instance)
+    cpdef dict predictProbability(self, Instance instance)

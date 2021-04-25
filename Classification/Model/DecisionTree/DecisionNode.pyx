@@ -260,3 +260,13 @@ cdef class DecisionNode(object):
                 if node.__condition.satisfy(instance):
                     return node.predict(instance)
             return self.__classLabel
+
+    cpdef dict predictProbabilityDistribution(self, Instance instance):
+        cdef DecisionNode node
+        if self.leaf:
+            return self.__data.classDistribution().getProbabilityDistribution()
+        else:
+            for node in self.children:
+                if node.__condition.satisfy(instance):
+                    return node.predictProbabilityDistribution(instance)
+            return self.__data.classDistribution().getProbabilityDistribution()

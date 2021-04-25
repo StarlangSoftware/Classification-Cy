@@ -44,3 +44,9 @@ cdef class RandomModel(Model):
             size = len(self.__classLabels)
             index = random.randrange(size)
             return self.__classLabels[index]
+
+    cpdef dict predictProbability(self, Instance instance):
+        result = {}
+        for classLabel in self.__classLabels:
+            result[classLabel] = 1.0 / len(self.__classLabels)
+        return result

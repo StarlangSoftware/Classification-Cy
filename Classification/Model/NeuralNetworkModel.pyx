@@ -220,3 +220,11 @@ cdef class NeuralNetworkModel(ValidatedModel):
             return self.predictWithCompositeInstance(instance.getPossibleClassLabels())
         else:
             return self.classLabels[self.y.maxIndex()]
+
+    cpdef dict predictProbability(self, Instance instance):
+        self.createInputVector(instance)
+        self.calculateOutput()
+        result = {}
+        for i in range(len(self.classLabels)):
+            result[self.classLabels[i]] = self.y.getValue(i)
+        return result

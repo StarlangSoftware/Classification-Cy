@@ -19,3 +19,4 @@ cdef class DecisionNode(object):
     cpdef __createChildrenForContinuous(self, int attributeIndex, double splitValue, RandomForestParameter parameter,
                                       bint isStump)
     cpdef str predict(self, Instance instance)
+    cpdef dict predictProbabilityDistribution(self, Instance instance)

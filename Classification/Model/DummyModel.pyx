@@ -36,3 +36,6 @@ cdef class DummyModel(Model):
             return self.distribution.getMaxItemIncludeTheseOnly(possibleClassLabels)
         else:
             return self.distribution.getMaxItem()
+
+    cpdef dict predictProbability(self, Instance instance):
+        return self.distribution.getProbabilityDistribution()
