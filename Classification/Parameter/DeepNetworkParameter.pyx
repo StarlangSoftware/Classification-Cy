@@ -1,6 +1,6 @@
 cdef class DeepNetworkParameter(LinearPerceptronParameter):
 
-    def __init__(self, seed: int, learningRate: float, etaDecrease: float, crossValidationRatio: float, epoch: int, hiddenLayers: list):
+    def __init__(self, seed: int, learningRate: float, etaDecrease: float, crossValidationRatio: float, epoch: int, hiddenLayers: list, activationFunction: object):
         """
         Parameters of the deep network classifier.
 
@@ -18,9 +18,12 @@ cdef class DeepNetworkParameter(LinearPerceptronParameter):
             Integer value for epoch number of the algorithm.
         hiddenLayers : list
             An integer list for hidden layers of the algorithm.
+        activationFunction : ActivationFunction
+            Activation function.
         """
         super().__init__(seed, learningRate, etaDecrease, crossValidationRatio, epoch)
         self.__hiddenLayers = hiddenLayers
+        self.__activationFunction = activationFunction
 
     cpdef int layerSize(self):
         """
@@ -49,3 +52,14 @@ cdef class DeepNetworkParameter(LinearPerceptronParameter):
             The element at the layerIndex of hiddenLayers list.
         """
         return self.__hiddenLayers[layerIndex]
+
+    cpdef object getActivationFunction(self):
+        """
+        Accessor for the activation function.
+
+        RETURNS
+        -------
+        ActivationFunction
+            The activation function.
+        """
+        return self.__activationFunction

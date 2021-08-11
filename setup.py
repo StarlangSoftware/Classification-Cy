@@ -18,7 +18,7 @@ setup(
                            "Classification/Experiment/*.pyx"],
                           compiler_directives={'language_level': "3"}),
     name='NlpToolkit-Classification-Cy',
-    version='1.0.1',
+    version='1.0.2',
     packages=['Classification', 'Classification.Model', 'Classification.Model.DecisionTree', 'Classification.Filter',
               'Classification.DataSet', 'Classification.Instance', 'Classification.Attribute',
               'Classification.Parameter', 'Classification.Classifier', 'Classification.Experiment',

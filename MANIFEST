@@ -211,6 +211,7 @@ Classification/Model/DecisionTree/DecisionTree.c
 Classification/Model/DecisionTree/DecisionTree.pxd
 Classification/Model/DecisionTree/DecisionTree.pyx
 Classification/Model/DecisionTree/__init__.py
+Classification/Parameter/ActivationFunction.py
 Classification/Parameter/BaggingParameter.c
 Classification/Parameter/BaggingParameter.pxd
 Classification/Parameter/BaggingParameter.pyx

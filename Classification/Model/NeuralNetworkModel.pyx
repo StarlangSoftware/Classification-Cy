@@ -2,6 +2,7 @@ import math
 from Classification.Instance.CompositeInstance cimport CompositeInstance
 from Classification.InstanceList.InstanceList cimport InstanceList
 
+from Classification.Parameter.ActivationFunction import ActivationFunction
 
 cdef class NeuralNetworkModel(ValidatedModel):
 
@@ -87,7 +88,7 @@ cdef class NeuralNetworkModel(ValidatedModel):
         self.x = instance.toVector()
         self.x.insert(0, 1.0)
 
-    cpdef Vector calculateHidden(self, Vector input, Matrix weights):
+    cpdef Vector calculateHidden(self, Vector input, Matrix weights, object activationFunction):
         """
         The calculateHidden method takes a {@link Vector} input and {@link Matrix} weights, It multiplies the weights
         Matrix with given input Vector than applies the sigmoid function and returns the result.
@@ -106,7 +107,12 @@ cdef class NeuralNetworkModel(ValidatedModel):
         """
         cdef Vector z
         z = weights.multiplyWithVectorFromRight(input)
-        z.sigmoid()
+        if activationFunction == ActivationFunction.SIGMOID:
+            z.sigmoid()
+        elif activationFunction == ActivationFunction.TANH:
+            z.tanh()
+        elif activationFunction == ActivationFunction.RELU:
+            z.relu()
         return z
 
     cpdef Vector calculateOneMinusHidden(self, Vector hidden):
@@ -129,7 +135,7 @@ cdef class NeuralNetworkModel(ValidatedModel):
         one.initAllSame(hidden.size(), 1.0)
         return one.difference(hidden)
 
-    cpdef calculateForwardSingleHiddenLayer(self, Matrix W, Matrix V):
+    cpdef calculateForwardSingleHiddenLayer(self, Matrix W, Matrix V, object activationFunction):
         """
         The calculateForwardSingleHiddenLayer method takes two matrices W and V. First it multiplies W with x, then
         multiplies V with the result of the previous multiplication.
@@ -142,7 +148,7 @@ cdef class NeuralNetworkModel(ValidatedModel):
             Matrix to multiply.
         """
         cdef Vector hidden, hiddenBiased
-        hidden = self.calculateHidden(self.x, W)
+        hidden = self.calculateHidden(self.x, W, activationFunction)
         hiddenBiased = hidden.biased()
         self.y = V.multiplyWithVectorFromRight(hiddenBiased)
 

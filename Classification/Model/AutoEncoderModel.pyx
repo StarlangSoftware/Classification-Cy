@@ -1,6 +1,7 @@
 import copy
 from Classification.Parameter.MultiLayerPerceptronParameter cimport MultiLayerPerceptronParameter
 
+from Classification.Parameter.ActivationFunction import ActivationFunction
 
 cdef class AutoEncoderModel(NeuralNetworkModel):
 
@@ -40,7 +41,7 @@ cdef class AutoEncoderModel(NeuralNetworkModel):
             for j in range(trainSet.size()):
                 self.createInputVector(trainSet.get(j))
                 self.r = trainSet.get(j).toVector()
-                hidden = self.calculateHidden(self.x, self.__W)
+                hidden = self.calculateHidden(self.x, self.__W, ActivationFunction.SIGMOID)
                 hiddenBiased = hidden.biased()
                 self.y = self.__V.multiplyWithVectorFromRight(hiddenBiased)
                 rMinusY = self.r.difference(self.y)
@@ -117,11 +118,11 @@ cdef class AutoEncoderModel(NeuralNetworkModel):
             Predicted value.
         """
         self.createInputVector(instance)
-        self.calculateForwardSingleHiddenLayer(self.__W, self.__V)
+        self.calculateForwardSingleHiddenLayer(self.__W, self.__V, ActivationFunction.SIGMOID)
         return self.y
 
     cpdef calculateOutput(self):
         """
         The calculateOutput method calculates a forward single hidden layer.
         """
-        self.calculateForwardSingleHiddenLayer(self.__W, self.__V)
+        self.calculateForwardSingleHiddenLayer(self.__W, self.__V, ActivationFunction.SIGMOID)

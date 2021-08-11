@@ -6,6 +6,7 @@ cdef class DeepNetworkModel(NeuralNetworkModel):
 
     cdef list __weights
     cdef int __hiddenLayerSize
+    cdef object __activationFunction
 
     cpdef __allocateWeights(self, DeepNetworkParameter parameters)
     cpdef list __setBestWeights(self)
