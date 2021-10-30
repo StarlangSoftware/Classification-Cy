@@ -1,4 +1,8 @@
-from distutils.core import setup
+from setuptools import setup
+
+from pathlib import Path
+this_directory = Path(__file__).parent
+long_description = (this_directory / "README.md").read_text()
 from Cython.Build import cythonize
 
 setup(
@@ -18,7 +22,7 @@ setup(
                            "Classification/Experiment/*.pyx"],
                           compiler_directives={'language_level': "3"}),
     name='NlpToolkit-Classification-Cy',
-    version='1.0.2',
+    version='1.0.3',
     packages=['Classification', 'Classification.Model', 'Classification.Model.DecisionTree', 'Classification.Filter',
               'Classification.DataSet', 'Classification.Instance', 'Classification.Attribute',
               'Classification.Parameter', 'Classification.Classifier', 'Classification.Experiment',
@@ -43,5 +47,7 @@ setup(
     author='olcaytaner',
     author_email='olcay.yildiz@ozyegin.edu.tr',
     description='Classification library',
-    install_requires=['NlpToolkit-Math-Cy', 'NlpToolkit-DataStructure-Cy', 'NlpToolkit-Sampling-Cy']
+    install_requires=['NlpToolkit-Math-Cy', 'NlpToolkit-DataStructure-Cy', 'NlpToolkit-Sampling-Cy'],
+    long_description=long_description,
+    long_description_content_type='text/markdown'
 )
