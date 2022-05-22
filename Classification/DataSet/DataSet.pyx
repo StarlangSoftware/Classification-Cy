@@ -45,6 +45,7 @@ cdef class DataSet(object):
         self.__definition = DataDefinition()
         inputFile = open(fileName, 'r', encoding='utf8')
         lines = inputFile.readlines()
+        inputFile.close()
         i = 0
         for line in lines:
             attributes = line.split(",")
