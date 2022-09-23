@@ -8,7 +8,9 @@ from Classification.Parameter.Parameter cimport Parameter
 
 cdef class C45(Classifier):
 
-    cpdef train(self, InstanceList trainSet, Parameter parameters):
+    cpdef train(self,
+                InstanceList trainSet,
+                Parameter parameters):
         """
         Training algorithm for C4.5 univariate decision tree classifier. 20 percent of the data are left aside for
         pruning 80 percent of the data is used for constructing the tree.
@@ -23,7 +25,10 @@ cdef class C45(Classifier):
         cdef Partition partition
         cdef DecisionTree tree
         if parameters.isPrune():
-            partition = Partition(trainSet, parameters.getCrossValidationRatio(), parameters.getSeed(), True)
+            partition = Partition(instanceList=trainSet,
+                                  ratio=parameters.getCrossValidationRatio(),
+                                  seed=parameters.getSeed(),
+                                  stratified=True)
             tree = DecisionTree(DecisionNode(partition.get(1)))
             tree.prune(partition.get(0))
         else:

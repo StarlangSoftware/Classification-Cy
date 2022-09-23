@@ -1,7 +1,7 @@
 cdef class ConfusionMatrix:
 
     cdef dict __matrix
-    cdef list __classLabels
+    cdef list __class_labels
 
     cpdef classify(self, str actualClass, str predictedClass)
     cpdef addConfusionMatrix(self, ConfusionMatrix confusionMatrix)

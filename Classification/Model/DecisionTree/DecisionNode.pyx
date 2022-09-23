@@ -7,12 +7,15 @@ from Classification.Attribute.DiscreteAttribute cimport DiscreteAttribute
 from Classification.Attribute.DiscreteIndexedAttribute cimport DiscreteIndexedAttribute
 from Classification.Instance.CompositeInstance cimport CompositeInstance
 
-
 cdef class DecisionNode(object):
 
     EPSILON = 0.0000000001
 
-    def __init__(self, data: InstanceList, condition=None, parameter=None, isStump=False):
+    def __init__(self,
+                 data: InstanceList,
+                 condition=None,
+                 parameter=None,
+                 isStump=False):
         """
         The DecisionNode method takes InstanceList data as input and then it sets the class label parameter by finding
         the most occurred class label of given data, it then gets distinct class labels as class labels ArrayList.
@@ -45,77 +48,86 @@ cdef class DecisionNode(object):
         isStump : bool
             Refers to decision trees with only 1 splitting rule.
         """
-        cdef int bestAttribute, size, j, index, k
-        cdef double bestEntropy, entropy, previousValue
-        cdef list classLabels, indexList
-        cdef DiscreteDistribution classDistribution, distribution, leftDistribution, rightDistribution
+        cdef int best_attribute, size, j, index, k
+        cdef double best_entropy, entropy, previous_value
+        cdef list class_labels, index_list
+        cdef DiscreteDistribution class_distribution, distribution, left_distribution, right_distribution
         cdef Instance instance
-        bestAttribute = -1
-        bestSplitValue = 0
+        best_attribute = -1
+        best_split_value = 0
         self.__condition = condition
         self.__data = data
-        self.__classLabel = Model.getMaximum(self.__data.getClassLabels())
+        self.__class_label = Model.getMaximum(self.__data.getClassLabels())
         self.leaf = True
         self.children = []
-        classLabels = self.__data.getDistinctClassLabels()
-        if len(classLabels) == 1:
+        class_labels = self.__data.getDistinctClassLabels()
+        if len(class_labels) == 1:
             return
         if isStump and condition is not None:
             return
-        indexList = [i for i in range(data.get(0).attributeSize())]
+        index_list = [i for i in range(data.get(0).attributeSize())]
         if parameter is not None and parameter.getAttributeSubsetSize() < data.get(0).attributeSize():
             random.seed(parameter.getSeed())
-            random.shuffle(indexList)
+            random.shuffle(index_list)
             size = parameter.getAttributeSubsetSize()
         else:
             size = data.get(0).attributeSize()
-        classDistribution = data.classDistribution()
-        bestEntropy = data.classDistribution().entropy()
+        class_distribution = data.classDistribution()
+        best_entropy = data.classDistribution().entropy()
         for j in range(size):
-            index = indexList[j]
+            index = index_list[j]
             if isinstance(data.get(0).getAttribute(index), DiscreteIndexedAttribute):
                 for k in range(data.get(0).getAttribute(index).getMaxIndex()):
                     distribution = data.discreteIndexedAttributeClassDistribution(index, k)
                     if distribution.getSum() > 0:
-                        classDistribution.removeDistribution(distribution)
-                        entropy = (classDistribution.entropy() * classDistribution.getSum() + distribution.entropy() * distribution.getSum()) / data.size()
-                        if entropy + self.EPSILON < bestEntropy:
-                            bestEntropy = entropy
-                            bestAttribute = index
-                            bestSplitValue = k
-                        classDistribution.addDistribution(distribution)
+                        class_distribution.removeDistribution(distribution)
+                        entropy = (class_distribution.entropy() * class_distribution.getSum() + distribution.entropy() * distribution.getSum()) / data.size()
+                        if entropy + self.EPSILON < best_entropy:
+                            best_entropy = entropy
+                            best_attribute = index
+                            best_split_value = k
+                        class_distribution.addDistribution(distribution)
             elif isinstance(data.get(0).getAttribute(index), DiscreteAttribute):
                 entropy = self.__entropyForDiscreteAttribute(index)
-                if entropy + self.EPSILON < bestEntropy:
-                    bestEntropy = entropy
-                    bestAttribute = index
+                if entropy + self.EPSILON < best_entropy:
+                    best_entropy = entropy
+                    best_attribute = index
             elif isinstance(data.get(0).getAttribute(index), ContinuousAttribute):
                 data.sortWrtAttribute(index)
-                previousValue = -100000000
-                leftDistribution = data.classDistribution()
-                rightDistribution = DiscreteDistribution()
+                previous_value = -100000000
+                left_distribution = data.classDistribution()
+                right_distribution = DiscreteDistribution()
                 for k in range(data.size()):
                     instance = data.get(k)
                     if k == 0:
-                        previousValue = instance.getAttribute(index).getValue()
-                    elif instance.getAttribute(index).getValue() != previousValue:
-                        splitValue = (previousValue + instance.getAttribute(index).getValue()) / 2
-                        previousValue = instance.getAttribute(index).getValue()
-                        entropy = (leftDistribution.getSum() / data.size()) * leftDistribution.entropy() + (rightDistribution.getSum() / data.size()) * rightDistribution.entropy()
-                        if entropy + self.EPSILON < bestEntropy:
-                            bestEntropy = entropy
-                            bestSplitValue = splitValue
-                            bestAttribute = index
-                    leftDistribution.removeItem(instance.getClassLabel())
-                    rightDistribution.addItem(instance.getClassLabel())
-        if bestAttribute != -1:
+                        previous_value = instance.getAttribute(index).getValue()
+                    elif instance.getAttribute(index).getValue() != previous_value:
+                        split_value = (previous_value + instance.getAttribute(index).getValue()) / 2
+                        previous_value = instance.getAttribute(index).getValue()
+                        entropy = (left_distribution.getSum() / data.size()) * left_distribution.entropy() + \
+                                  (right_distribution.getSum() / data.size()) * right_distribution.entropy()
+                        if entropy + self.EPSILON < best_entropy:
+                            best_entropy = entropy
+                            best_split_value = split_value
+                            best_attribute = index
+                    left_distribution.removeItem(instance.getClassLabel())
+                    right_distribution.addItem(instance.getClassLabel())
+        if best_attribute != -1:
             self.leaf = False
-            if isinstance(data.get(0).getAttribute(bestAttribute), DiscreteIndexedAttribute):
-                self.__createChildrenForDiscreteIndexed(bestAttribute, bestSplitValue, parameter, isStump)
-            elif isinstance(data.get(0).getAttribute(bestAttribute), DiscreteAttribute):
-                self.__createChildrenForDiscrete(bestAttribute, parameter, isStump)
-            elif isinstance(data.get(0).getAttribute(bestAttribute), ContinuousAttribute):
-                self.__createChildrenForContinuous(bestAttribute, bestSplitValue, parameter, isStump)
+            if isinstance(data.get(0).getAttribute(best_attribute), DiscreteIndexedAttribute):
+                self.__createChildrenForDiscreteIndexed(attributeIndex=best_attribute,
+                                                        attributeValue=best_split_value,
+                                                        parameter=parameter,
+                                                        isStump=isStump)
+            elif isinstance(data.get(0).getAttribute(best_attribute), DiscreteAttribute):
+                self.__createChildrenForDiscrete(attributeIndex=best_attribute,
+                                                 parameter=parameter,
+                                                 isStump=isStump)
+            elif isinstance(data.get(0).getAttribute(best_attribute), ContinuousAttribute):
+                self.__createChildrenForContinuous(attributeIndex=best_attribute,
+                                                   splitValue=best_split_value,
+                                                   parameter=parameter,
+                                                   isStump=isStump)
 
     cpdef __entropyForDiscreteAttribute(self, int attributeIndex):
         """
@@ -141,8 +153,11 @@ cdef class DecisionNode(object):
             total += (distribution.getSum() / self.__data.size()) * distribution.entropy()
         return total
 
-    cpdef __createChildrenForDiscreteIndexed(self, int attributeIndex, int attributeValue,
-                                           RandomForestParameter parameter, bint isStump):
+    cpdef __createChildrenForDiscreteIndexed(self,
+                                             int attributeIndex,
+                                             int attributeValue,
+                                             RandomForestParameter parameter,
+                                             bint isStump):
         """
         The createChildrenForDiscreteIndexed method creates an list of DecisionNodes as children and a partition with
         respect to indexed attribute.
@@ -158,18 +173,29 @@ cdef class DecisionNode(object):
         isStump : bool
             Refers to decision trees with only 1 splitting rule.
         """
-        cdef Partition childrenData
-        childrenData = Partition(self.__data, attributeIndex, attributeValue)
+        cdef Partition children_data
+        children_data = Partition(self.__data, attributeIndex, attributeValue)
         self.children.append(
-            DecisionNode(childrenData.get(0),
-                         DecisionCondition(attributeIndex,
-                                           DiscreteIndexedAttribute("", attributeValue, self.__data.get(0).getAttribute(attributeIndex).getMaxIndex())), parameter, isStump))
+            DecisionNode(data=children_data.get(0),
+                         condition=DecisionCondition(attributeIndex,
+                                           DiscreteIndexedAttribute("",
+                                                                    attributeValue,
+                                                                    self.__data.get(0).getAttribute(attributeIndex).getMaxIndex())),
+                         parameter=parameter,
+                         isStump=isStump))
         self.children.append(
-            DecisionNode(childrenData.get(1),
-                         DecisionCondition(attributeIndex,
-                                           DiscreteIndexedAttribute("", -1, self.__data.get(0).getAttribute(attributeIndex).getMaxIndex())), parameter, isStump))
+            DecisionNode(data=children_data.get(1),
+                         condition=DecisionCondition(attributeIndex,
+                                           DiscreteIndexedAttribute("",
+                                                                    -1,
+                                                                    self.__data.get(0).getAttribute(attributeIndex).getMaxIndex())),
+                         parameter=parameter,
+                         isStump=isStump))
 
-    cpdef __createChildrenForDiscrete(self, int attributeIndex, RandomForestParameter parameter, bint isStump):
+    cpdef __createChildrenForDiscrete(self,
+                                      int attributeIndex,
+                                      RandomForestParameter parameter,
+                                      bint isStump):
         """
         The createChildrenForDiscrete method creates an ArrayList of values, a partition with respect to attributes and
         a list of DecisionNodes as children.
@@ -183,15 +209,16 @@ cdef class DecisionNode(object):
         isStump : bool
             Refers to decision trees with only 1 splitting rule.
         """
-        cdef list valueList
-        cdef Partition childrenData
+        cdef list value_list
+        cdef Partition children_data
         cdef int i
-        valueList = self.__data.getAttributeValueList(attributeIndex)
-        childrenData = Partition(self.__data, attributeIndex)
-        for i in range(len(valueList)):
-            self.children.append(DecisionNode(childrenData.get(i),
-                                              DecisionCondition(attributeIndex, DiscreteAttribute(valueList[i])),
-                                              parameter, isStump))
+        value_list = self.__data.getAttributeValueList(attributeIndex)
+        children_data = Partition(self.__data, attributeIndex)
+        for i in range(len(value_list)):
+            self.children.append(DecisionNode(data=children_data.get(i),
+                                              condition=DecisionCondition(attributeIndex, DiscreteAttribute(value_list[i])),
+                                              parameter=parameter,
+                                              isStump=isStump))
 
     cpdef __createChildrenForContinuous(self, int attributeIndex, double splitValue, RandomForestParameter parameter,
                                       bint isStump):
@@ -210,12 +237,12 @@ cdef class DecisionNode(object):
         splitValue : float
             Split value is used for partitioning.
         """
-        cdef Partition childrenData
-        childrenData = Partition(self.__data, attributeIndex, splitValue)
-        self.children.append(DecisionNode(childrenData.get(0),
+        cdef Partition children_data
+        children_data = Partition(self.__data, attributeIndex, splitValue)
+        self.children.append(DecisionNode(children_data.get(0),
                                           DecisionCondition(attributeIndex, ContinuousAttribute(splitValue), "<"),
                                           parameter, isStump))
-        self.children.append(DecisionNode(childrenData.get(1),
+        self.children.append(DecisionNode(children_data.get(1),
                                           DecisionCondition(attributeIndex, ContinuousAttribute(splitValue), ">"),
                                           parameter, isStump))
 
@@ -234,32 +261,32 @@ cdef class DecisionNode(object):
         str
             The prediction for given instance.
         """
-        cdef list possibleClassLabels
+        cdef list possible_class_labels
         cdef DiscreteDistribution distribution
-        cdef str predictedClass, childPrediction
+        cdef str predicted_class, child_prediction
         cdef DecisionNode node
         if isinstance(instance, CompositeInstance):
-            possibleClassLabels = instance.getPossibleClassLabels()
+            possible_class_labels = instance.getPossibleClassLabels()
             distribution = self.__data.classDistribution()
-            predictedClass = distribution.getMaxItemIncludeTheseOnly(possibleClassLabels)
+            predicted_class = distribution.getMaxItemIncludeTheseOnly(possible_class_labels)
             if self.leaf:
-                return predictedClass
+                return predicted_class
             else:
                 for node in self.children:
                     if node.__condition.satisfy(instance):
-                        childPrediction = node.predict(instance)
-                        if childPrediction is not None:
-                            return childPrediction
+                        child_prediction = node.predict(instance)
+                        if child_prediction is not None:
+                            return child_prediction
                         else:
-                            return predictedClass
-                return predictedClass
+                            return predicted_class
+                return predicted_class
         elif self.leaf:
-            return self.__classLabel
+            return self.__class_label
         else:
             for node in self.children:
                 if node.__condition.satisfy(instance):
                     return node.predict(instance)
-            return self.__classLabel
+            return self.__class_label
 
     cpdef dict predictProbabilityDistribution(self, Instance instance):
         cdef DecisionNode node

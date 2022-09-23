@@ -8,7 +8,7 @@ cdef class DecisionNode(object):
 
     cdef list children
     cdef InstanceList __data
-    cdef str __classLabel
+    cdef str __class_label
     cdef bint leaf
     cdef DecisionCondition __condition
 

@@ -5,7 +5,9 @@ import math
 
 cdef class EuclidianDistance(DistanceMetric):
 
-    cpdef double distance(self, Instance instance1, Instance instance2):
+    cpdef double distance(self,
+                          Instance instance1,
+                          Instance instance2):
         cdef double result
         cdef int i
         result = 0

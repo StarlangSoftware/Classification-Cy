@@ -6,7 +6,9 @@ from Classification.Parameter.Parameter cimport Parameter
 
 cdef class Dummy(Classifier):
 
-    cpdef train(self, InstanceList trainSet, Parameter parameters):
+    cpdef train(self,
+                InstanceList trainSet,
+                Parameter parameters):
         """
         Training algorithm for the dummy classifier. Actually dummy classifier returns the maximum occurring class in
         the training data, there is no training.

@@ -23,11 +23,16 @@ cdef class SingleRunWithK(SingleRun):
         """
         self.__K = K
 
-    cpdef runExperiment(self, Classifier classifier, Parameter parameter, CrossValidation crossValidation):
-        cdef InstanceList trainSet, testSet
-        trainSet = InstanceList(crossValidation.getTrainFold(0))
-        testSet = InstanceList(crossValidation.getTestFold(0))
-        return classifier.singleRun(parameter, trainSet, testSet)
+    cpdef runExperiment(self,
+                        Classifier classifier,
+                        Parameter parameter,
+                        CrossValidation crossValidation):
+        cdef InstanceList train_set, test_set
+        train_set = InstanceList(crossValidation.getTrainFold(0))
+        test_set = InstanceList(crossValidation.getTestFold(0))
+        return classifier.singleRun(parameter=parameter,
+                                    trainSet=train_set,
+                                    testSet=test_set)
 
     cpdef Performance execute(self, Experiment experiment):
         """
@@ -45,6 +50,9 @@ cdef class SingleRunWithK(SingleRun):
             A Performance instance.
         """
         cdef KFoldCrossValidation crossValidation
-        crossValidation = KFoldCrossValidation(experiment.getDataSet().getInstances(), self.__K,
-                                               experiment.getParameter().getSeed())
-        return self.runExperiment(experiment.getClassifier(), experiment.getParameter(), crossValidation)
+        cross_validation = KFoldCrossValidation(instance_list=experiment.getDataSet().getInstances(),
+                                               K=self.__K,
+                                               seed=experiment.getParameter().getSeed())
+        return self.runExperiment(classifier=experiment.getClassifier(),
+                                  parameter=experiment.getParameter(),
+                                  crossValidation=cross_validation)

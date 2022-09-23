@@ -1,7 +1,13 @@
 cdef class MultiLayerPerceptronParameter(LinearPerceptronParameter):
 
-    def __init__(self, seed: int, learningRate: float, etaDecrease: float, crossValidationRatio: float, epoch: int,
-                 hiddenNodes: int, activationFunction: object):
+    def __init__(self,
+                 seed: int,
+                 learningRate: float,
+                 etaDecrease: float,
+                 crossValidationRatio: float,
+                 epoch: int,
+                 hiddenNodes: int,
+                 activationFunction: object):
         """
         Parameters of the multi layer perceptron algorithm.
 
@@ -23,8 +29,8 @@ cdef class MultiLayerPerceptronParameter(LinearPerceptronParameter):
             Activation function.
         """
         super().__init__(seed, learningRate, etaDecrease, crossValidationRatio, epoch)
-        self.__hiddenNodes = hiddenNodes
-        self.__activationFunction = activationFunction
+        self.__hidden_nodes = hiddenNodes
+        self.__activation_function = activationFunction
 
     cpdef int getHiddenNodes(self):
         """
@@ -35,7 +41,7 @@ cdef class MultiLayerPerceptronParameter(LinearPerceptronParameter):
         int
             The hiddenNodes.
         """
-        return self.__hiddenNodes
+        return self.__hidden_nodes
 
     cpdef object getActivationFunction(self):
         """
@@ -46,4 +52,4 @@ cdef class MultiLayerPerceptronParameter(LinearPerceptronParameter):
         ActivationFunction
             The activation function.
         """
-        return self.__activationFunction
+        return self.__activation_function

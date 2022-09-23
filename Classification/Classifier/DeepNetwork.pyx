@@ -7,7 +7,9 @@ from Classification.Parameter.Parameter cimport Parameter
 
 cdef class DeepNetwork(Classifier):
 
-    cpdef train(self, InstanceList trainSet, Parameter parameters):
+    cpdef train(self,
+                InstanceList trainSet,
+                Parameter parameters):
         """
         Training algorithm for deep network classifier.
 
@@ -19,5 +21,10 @@ cdef class DeepNetwork(Classifier):
             Parameters of the deep network algorithm. crossValidationRatio and seed are used as parameters.
         """
         cdef Partition partition
-        partition = Partition(trainSet, parameters.getCrossValidationRatio(), parameters.getSeed(), True)
-        self.model = DeepNetworkModel(partition.get(1), partition.get(0), parameters)
+        partition = Partition(instanceList=trainSet,
+                              ratio=parameters.getCrossValidationRatio(),
+                              seed=parameters.getSeed(),
+                              stratified=True)
+        self.model = DeepNetworkModel(trainSet=partition.get(1),
+                                      validationSet=partition.get(0),
+                                      parameters=parameters)

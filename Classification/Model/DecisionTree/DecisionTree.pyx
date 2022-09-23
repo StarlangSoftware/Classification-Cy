@@ -30,16 +30,18 @@ cdef class DecisionTree(ValidatedModel):
         str
             Possible class labels.
         """
-        cdef str predictedClass
-        predictedClass = self.__root.predict(instance)
-        if predictedClass is None and isinstance(instance, CompositeInstance):
-            predictedClass = instance.getPossibleClassLabels()
-        return predictedClass
+        cdef str predicted_class
+        predicted_class = self.__root.predict(instance)
+        if predicted_class is None and isinstance(instance, CompositeInstance):
+            predicted_class = instance.getPossibleClassLabels()
+        return predicted_class
 
     cpdef dict predictProbability(self, Instance instance):
         return self.__root.predictProbabilityDistribution(instance)
 
-    cpdef pruneNode(self, DecisionNode node, InstanceList pruneSet):
+    cpdef pruneNode(self,
+                    DecisionNode node,
+                    InstanceList pruneSet):
         """
         The prune method takes a DecisionNode and an InstanceList as inputs. It checks the classification performance
         of given InstanceList before pruning, i.e making a node leaf, and after pruning. If the after performance is

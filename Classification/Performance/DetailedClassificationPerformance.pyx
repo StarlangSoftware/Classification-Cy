@@ -11,7 +11,7 @@ cdef class DetailedClassificationPerformance(ClassificationPerformance):
             ConfusionMatrix input.
         """
         super().__init__(confusionMatrix.getAccuracy())
-        self.__confusionMatrix = confusionMatrix
+        self.__confusion_matrix = confusionMatrix
 
     cpdef ConfusionMatrix getConfusionMatrix(self):
         """
@@ -22,4 +22,4 @@ cdef class DetailedClassificationPerformance(ClassificationPerformance):
         ConfusionMatrix
             ConfusionMatrix.
         """
-        return self.__confusionMatrix
+        return self.__confusion_matrix

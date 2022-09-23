@@ -8,7 +8,7 @@ cdef class KnnModel(Model):
 
     cdef InstanceList __data
     cdef int __k
-    cdef DistanceMetric __distanceMetric
+    cdef DistanceMetric __distance_metric
 
     cpdef str predict(self, Instance instance)
     cpdef dict predictProbability(self, Instance instance)

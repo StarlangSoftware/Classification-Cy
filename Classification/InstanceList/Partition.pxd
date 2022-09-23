@@ -3,7 +3,7 @@ from Classification.InstanceList.InstanceList cimport InstanceList
 
 cdef class Partition(object):
 
-    cdef list __multilist
+    cdef list __multi_list
 
     cpdef add(self, InstanceList _list)
     cpdef int size(self)

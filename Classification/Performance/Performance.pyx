@@ -9,7 +9,7 @@ cdef class Performance(object):
         errorRate : float
             Double input.
         """
-        self.errorRate = errorRate
+        self.error_rate = errorRate
 
     cpdef double getErrorRate(self):
         """
@@ -20,4 +20,4 @@ cdef class Performance(object):
         float
             Double errorRate.
         """
-        return self.errorRate
+        return self.error_rate

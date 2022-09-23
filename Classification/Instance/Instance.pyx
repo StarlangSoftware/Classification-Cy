@@ -4,7 +4,9 @@ from Classification.Attribute.ContinuousAttribute cimport ContinuousAttribute
 
 cdef class Instance(object):
 
-    def __init__(self, classLabel: str, attributes=None):
+    def __init__(self,
+                 classLabel: str,
+                 attributes=None):
         """
         Constructor for a single instance. Given the attributes and class label, it generates a new instance.
 
@@ -17,17 +19,17 @@ cdef class Instance(object):
         """
         if attributes is None:
             attributes = []
-        self.__classLabel = classLabel
+        self.__class_label = classLabel
         self.__attributes = attributes
 
     def __lt__(self, other):
-        return self.__classLabel < other.classLabel
+        return self.__class_label < other.classLabel
 
     def __gt__(self, other):
-        return self.__classLabel > other.classLabel
+        return self.__class_label > other.classLabel
 
     def __eq__(self, other):
-        return self.__classLabel == other.classLabel
+        return self.__class_label == other.classLabel
 
     cpdef addDiscreteAttribute(self, str value):
         """
@@ -161,7 +163,7 @@ cdef class Instance(object):
         str
             Class label of the instance.
         """
-        return self.__classLabel
+        return self.__class_label
 
     def __str__(self) -> str:
         """
@@ -177,7 +179,7 @@ cdef class Instance(object):
         result = ""
         for attribute in self.__attributes:
             result = result + attribute.__str__() + ","
-        result = result + self.__classLabel
+        result = result + self.__class_label
         return result
 
     cpdef Instance getSubSetOfFeatures(self, FeatureSubSet featureSubSet):
@@ -197,7 +199,7 @@ cdef class Instance(object):
         """
         cdef Instance result
         cdef int i
-        result = Instance(self.__classLabel)
+        result = Instance(self.__class_label)
         for i in range(featureSubSet.size()):
             result.addAttribute(self.__attributes[featureSubSet.get(i)])
         return result

@@ -1,6 +1,13 @@
 cdef class DeepNetworkParameter(LinearPerceptronParameter):
 
-    def __init__(self, seed: int, learningRate: float, etaDecrease: float, crossValidationRatio: float, epoch: int, hiddenLayers: list, activationFunction: object):
+    def __init__(self,
+                 seed: int,
+                 learningRate: float,
+                 etaDecrease: float,
+                 crossValidationRatio: float,
+                 epoch: int,
+                 hiddenLayers: list,
+                 activationFunction: object):
         """
         Parameters of the deep network classifier.
 

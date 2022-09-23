@@ -15,15 +15,18 @@ cdef class KFoldRun(MultipleRun):
         """
         self.K = K
 
-    cpdef runExperiment(self, Classifier classifier, Parameter parameter, ExperimentPerformance experimentPerformance,
-                      CrossValidation crossValidation):
+    cpdef runExperiment(self,
+                        Classifier classifier,
+                        Parameter parameter,
+                        ExperimentPerformance experimentPerformance,
+                        CrossValidation crossValidation):
         cdef int i
-        cdef InstanceList trainSet, testSet
+        cdef InstanceList train_set, test_set
         for i in range(self.K):
-            trainSet = InstanceList(crossValidation.getTrainFold(i))
-            testSet = InstanceList(crossValidation.getTestFold(i))
-            classifier.train(trainSet, parameter)
-            experimentPerformance.add(classifier.test(testSet))
+            train_set = InstanceList(crossValidation.getTrainFold(i))
+            test_set = InstanceList(crossValidation.getTestFold(i))
+            classifier.train(train_set, parameter)
+            experimentPerformance.add(classifier.test(test_set))
 
     cpdef ExperimentPerformance execute(self, Experiment experiment):
         """
@@ -42,7 +45,11 @@ cdef class KFoldRun(MultipleRun):
         cdef ExperimentPerformance result
         cdef KFoldCrossValidation crossValidation
         result = ExperimentPerformance()
-        crossValidation = KFoldCrossValidation(experiment.getDataSet().getInstances(), self.K, experiment.getParameter()
-                                               .getSeed())
-        self.runExperiment(experiment.getClassifier(), experiment.getParameter(), result, crossValidation)
+        crossValidation = KFoldCrossValidation(instance_list=experiment.getDataSet().getInstances(),
+                                               K=self.K,
+                                               seed=experiment.getParameter().getSeed())
+        self.runExperiment(classifier=experiment.getClassifier(),
+                           parameter=experiment.getParameter(),
+                           experimentPerformance=result,
+                           crossValidation=crossValidation)
         return result

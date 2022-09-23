@@ -34,9 +34,9 @@ cdef class LaryToBinary(LaryFilter):
         cdef int size, i, index, j
         size = instance.attributeSize()
         for i in range(size):
-            if len(self.attributeDistributions[i]) > 0:
-                index = self.attributeDistributions[i].getIndex(instance.getAttribute(i).__str__())
-                for j in range(len(self.attributeDistributions[i])):
+            if len(self.attribute_distributions[i]) > 0:
+                index = self.attribute_distributions[i].getIndex(instance.getAttribute(i).__str__())
+                for j in range(len(self.attribute_distributions[i])):
                     if j != index:
                         instance.addAttribute(BinaryAttribute(False))
                     else:
@@ -52,7 +52,7 @@ cdef class LaryToBinary(LaryFilter):
         dataDefinition = self.dataSet.getDataDefinition()
         size = dataDefinition.attributeCount()
         for i in range(size):
-            if len(self.attributeDistributions[i]):
-                for j in range(len(self.attributeDistributions[i])):
+            if len(self.attribute_distributions[i]):
+                for j in range(len(self.attribute_distributions[i])):
                     dataDefinition.addAttribute(AttributeType.BINARY)
         self.removeDiscreteAttributesFromDataDefinition(size)

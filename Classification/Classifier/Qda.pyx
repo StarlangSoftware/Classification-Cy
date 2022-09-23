@@ -14,7 +14,9 @@ import math
 
 cdef class Qda(Classifier):
 
-    cpdef train(self, InstanceList trainSet, Parameter parameters):
+    cpdef train(self,
+                InstanceList trainSet,
+                Parameter parameters):
         """
         Training algorithm for the quadratic discriminant analysis classifier (Introduction to Machine Learning,
         Alpaydin, 2015).
@@ -25,30 +27,30 @@ cdef class Qda(Classifier):
             Training data given to the algorithm.
         """
         cdef dict w0, w, W
-        cdef Partition classLists
-        cdef DiscreteDistribution priorDistribution
+        cdef Partition class_lists
+        cdef DiscreteDistribution prior_distribution
         cdef int i
         cdef str Ci
-        cdef Vector averageVector, wi
-        cdef Matrix classCovariance, Wi
+        cdef Vector average_vector, wi
+        cdef Matrix class_covariance, Wi
         cdef double determinant, w0i
         w0 = {}
         w = {}
         W = {}
-        classLists = Partition(trainSet)
-        priorDistribution = trainSet.classDistribution()
-        for i in range(classLists.size()):
-            Ci = classLists.get(i).getClassLabel()
-            averageVector = Vector(classLists.get(i).continuousAverage())
-            classCovariance = classLists.get(i).covariance(averageVector)
-            determinant = classCovariance.determinant()
-            classCovariance.inverse()
-            Wi = deepcopy(classCovariance)
+        class_lists = Partition(trainSet)
+        prior_distribution = trainSet.classDistribution()
+        for i in range(class_lists.size()):
+            Ci = class_lists.get(i).getClassLabel()
+            average_vector = Vector(class_lists.get(i).continuousAverage())
+            class_covariance = class_lists.get(i).covariance(average_vector)
+            determinant = class_covariance.determinant()
+            class_covariance.inverse()
+            Wi = deepcopy(class_covariance)
             Wi.multiplyWithConstant(-0.5)
             W[Ci] = Wi
-            wi = classCovariance.multiplyWithVectorFromLeft(averageVector)
+            wi = class_covariance.multiplyWithVectorFromLeft(average_vector)
             w[Ci] = wi
-            w0i = -0.5 * (wi.dotProduct(averageVector) + math.log(determinant)) + math.log(priorDistribution.
+            w0i = -0.5 * (wi.dotProduct(average_vector) + math.log(determinant)) + math.log(prior_distribution.
                                                                                            getProbability(Ci))
             w0[Ci] = w0i
-        self.model = QdaModel(priorDistribution, W, w, w0)
+        self.model = QdaModel(prior_distribution, W, w, w0)

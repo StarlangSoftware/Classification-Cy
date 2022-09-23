@@ -8,10 +8,12 @@ import math
 
 cdef class Pairedt(PairedTest):
 
-    cpdef __testStatistic(self, ExperimentPerformance classifier1, ExperimentPerformance classifier2):
+    cpdef __testStatistic(self,
+                          ExperimentPerformance classifier1,
+                          ExperimentPerformance classifier2):
         cdef list difference
         cdef int i
-        cdef double total, mean, standardDeviation
+        cdef double total, mean, standard_deviation
         if classifier1.numberOfExperiments() != classifier2.numberOfExperiments():
             raise StatisticalTestNotApplicable("In order to apply a paired test, you need to have the same number of "
                                                "experiments in both algorithms.")
@@ -24,14 +26,16 @@ cdef class Pairedt(PairedTest):
         total = 0
         for i in range(classifier1.numberOfExperiments()):
             total += (difference[i] - mean) * (difference[i] - mean)
-        standardDeviation = math.sqrt(total / (classifier1.numberOfExperiments() - 1))
-        if standardDeviation == 0:
+        standard_deviation = math.sqrt(total / (classifier1.numberOfExperiments() - 1))
+        if standard_deviation == 0:
             raise StatisticalTestNotApplicable("Variance is 0.")
-        return math.sqrt(classifier1.numberOfExperiments()) * mean / standardDeviation
+        return math.sqrt(classifier1.numberOfExperiments()) * mean / standard_deviation
 
-    cpdef StatisticalTestResult compare(self, ExperimentPerformance classifier1, ExperimentPerformance classifier2):
+    cpdef StatisticalTestResult compare(self,
+                                        ExperimentPerformance classifier1,
+                                        ExperimentPerformance classifier2):
         cdef double statistic
-        cdef int degreeOfFreedom
+        cdef int degree_of_freedom
         statistic = self.__testStatistic(classifier1, classifier2)
-        degreeOfFreedom = classifier1.numberOfExperiments() - 1
-        return StatisticalTestResult(Distribution.tDistribution(statistic, degreeOfFreedom), False)
+        degree_of_freedom = classifier1.numberOfExperiments() - 1
+        return StatisticalTestResult(Distribution.tDistribution(statistic, degree_of_freedom), False)

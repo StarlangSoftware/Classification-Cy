@@ -6,7 +6,7 @@ from Classification.Model.ValidatedModel cimport ValidatedModel
 
 cdef class NeuralNetworkModel(ValidatedModel):
 
-    cdef list classLabels
+    cdef list class_labels
     cdef int K, d
     cdef Vector x, y, r
 

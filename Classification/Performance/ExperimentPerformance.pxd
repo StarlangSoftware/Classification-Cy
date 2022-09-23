@@ -6,7 +6,7 @@ from Classification.Performance.DetailedClassificationPerformance cimport Detail
 cdef class ExperimentPerformance:
 
     cdef list __results
-    cdef bint __containsDetails
+    cdef bint __contains_details
     cdef bint __classification
 
     cpdef initWithFile(self, str fileName)

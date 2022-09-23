@@ -9,7 +9,7 @@ cdef class ExperimentPerformance:
         A constructor which creates a new list of Performance as results.
         """
         self.__results = []
-        self.__containsDetails = True
+        self.__contains_details = True
         self.__classification = True
 
     def __gt__(self, other) -> bool:
@@ -34,9 +34,10 @@ cdef class ExperimentPerformance:
         """
         cdef str line
         cdef list lines
-        self.__containsDetails = False
+        self.__contains_details = False
         inputFile = open(fileName, "r", encoding='utf8')
         lines = inputFile.readlines()
+        inputFile.close()
         for line in lines:
             self.__results.append(Performance(float(line)))
 
@@ -50,7 +51,7 @@ cdef class ExperimentPerformance:
             Performance input.
         """
         if not isinstance(performance, DetailedClassificationPerformance):
-            self.__containsDetails = False
+            self.__contains_details = False
         if not isinstance(performance, ClassificationPerformance):
             self.__classification = False
         self.__results.append(performance)
@@ -109,12 +110,12 @@ cdef class ExperimentPerformance:
         Performance
             A new Performance with the mean of the summation of errorRates.
         """
-        cdef double sumError
+        cdef double sum_error
         cdef Performance performance
-        sumError = 0
+        sum_error = 0
         for performance in self.__results:
-            sumError += performance.getErrorRate()
-        return Performance(sumError / len(self.__results))
+            sum_error += performance.getErrorRate()
+        return Performance(sum_error / len(self.__results))
 
     cpdef ClassificationPerformance meanClassificationPerformance(self):
         """
@@ -127,14 +128,14 @@ cdef class ExperimentPerformance:
         ClassificationPerformance
             A new classificationPerformance with the mean of that summation.
         """
-        cdef double sumAccuracy
+        cdef double sum_accuracy
         cdef ClassificationPerformance performance
         if len(self.__results) == 0 or not self.__classification:
             return None
-        sumAccuracy = 0
+        sum_accuracy = 0
         for performance in self.__results:
-            sumAccuracy += performance.getAccuracy()
-        return ClassificationPerformance(sumAccuracy / len(self.__results))
+            sum_accuracy += performance.getAccuracy()
+        return ClassificationPerformance(sum_accuracy / len(self.__results))
 
     cpdef DetailedClassificationPerformance meanDetailedPerformance(self):
         """
@@ -147,14 +148,14 @@ cdef class ExperimentPerformance:
         DetailedCassificationPerformance
             A new DetailedClassificationPerformance with the ConfusionMatrix sum.
         """
-        cdef ConfusionMatrix sumMatrix
+        cdef ConfusionMatrix sum_matrix
         cdef int i
-        if len(self.__results) == 0 or not self.__containsDetails:
+        if len(self.__results) == 0 or not self.__contains_details:
             return None
-        sumMatrix = self.__results[0].getConfusionMatrix()
+        sum_matrix = self.__results[0].getConfusionMatrix()
         for i in range(1, len(self.__results)):
-            sumMatrix.addConfusionMatrix(self.__results[i].getConfusionMatrix())
-        return DetailedClassificationPerformance(sumMatrix)
+            sum_matrix.addConfusionMatrix(self.__results[i].getConfusionMatrix())
+        return DetailedClassificationPerformance(sum_matrix)
 
     cpdef Performance standardDeviationPerformance(self):
         """
@@ -166,13 +167,13 @@ cdef class ExperimentPerformance:
         Performance
             A new Performance with the standard deviation.
         """
-        cdef double sumErrorRate
-        cdef Performance averagePerformance, performance
-        sumErrorRate = 0
-        averagePerformance = self.meanPerformance()
+        cdef double sum_error_rate
+        cdef Performance average_performance, performance
+        sum_error_rate = 0
+        average_performance = self.meanPerformance()
         for performance in self.__results:
-            sumErrorRate += math.pow(performance.getErrorRate() - averagePerformance.getErrorRate(), 2)
-        return Performance(math.sqrt(sumErrorRate / (len(self.__results) - 1)))
+            sum_error_rate += math.pow(performance.getErrorRate() - average_performance.getErrorRate(), 2)
+        return Performance(math.sqrt(sum_error_rate / (len(self.__results) - 1)))
 
     cpdef ClassificationPerformance standardDeviationClassificationPerformance(self):
         """
@@ -184,17 +185,17 @@ cdef class ExperimentPerformance:
         ClassificationPerformance
             A new ClassificationPerformance with standard deviation.
         """
-        cdef double sumAccuracy, sumErrorRate
+        cdef double sum_accuracy, sum_error_rate
         cdef ClassificationPerformance averageClassificationPerformance, performance
         if len(self.__results) == 0 or not self.__classification:
             return None
-        sumAccuracy = 0
-        sumErrorRate = 0
+        sum_accuracy = 0
+        sum_error_rate = 0
         averageClassificationPerformance = self.meanClassificationPerformance()
         for performance in self.__results:
-            sumAccuracy += math.pow(performance.getAccuracy() - averageClassificationPerformance.getAccuracy(), 2)
-            sumErrorRate += math.pow(performance.getErrorRate() - averageClassificationPerformance.getErrorRate(), 2)
-        return ClassificationPerformance(math.sqrt(sumAccuracy / (len(self.__results) - 1)))
+            sum_accuracy += math.pow(performance.getAccuracy() - averageClassificationPerformance.getAccuracy(), 2)
+            sum_error_rate += math.pow(performance.getErrorRate() - averageClassificationPerformance.getErrorRate(), 2)
+        return ClassificationPerformance(math.sqrt(sum_accuracy / (len(self.__results) - 1)))
 
     cpdef bint isBetter(self, ExperimentPerformance experimentPerformance):
         """

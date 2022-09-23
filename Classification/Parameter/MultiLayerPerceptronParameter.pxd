@@ -3,8 +3,8 @@ from Classification.Parameter.LinearPerceptronParameter cimport LinearPerceptron
 
 cdef class MultiLayerPerceptronParameter(LinearPerceptronParameter):
 
-    cdef int __hiddenNodes
-    cdef object __activationFunction
+    cdef int __hidden_nodes
+    cdef object __activation_function
 
     cpdef int getHiddenNodes(self)
     cpdef object getActivationFunction(self)

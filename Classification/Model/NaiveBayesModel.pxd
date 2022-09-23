@@ -4,9 +4,9 @@ from Classification.Model.GaussianModel cimport GaussianModel
 
 cdef class NaiveBayesModel(GaussianModel):
 
-    cdef dict __classMeans
-    cdef dict __classDeviations
-    cdef dict __classAttributeDistributions
+    cdef dict __class_means
+    cdef dict __class_deviations
+    cdef dict __class_attribute_distributions
 
     cpdef initForContinuous(self, dict classMeans, dict classDeviations)
     cpdef initForDiscrete(self, dict classAttributeDistributions)

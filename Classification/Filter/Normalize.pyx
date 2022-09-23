@@ -6,8 +6,8 @@ from Classification.Instance.Instance cimport Instance
 
 cdef class Normalize(FeatureFilter):
 
-    cdef Instance __averageInstance
-    cdef Instance __standardDeviationInstance
+    cdef Instance __average_instance
+    cdef Instance __standard_deviation_instance
 
     def __init__(self, dataSet: DataSet):
         """
@@ -20,8 +20,8 @@ cdef class Normalize(FeatureFilter):
             Instances whose continuous attribute values will be normalized.
         """
         super().__init__(dataSet)
-        self.__averageInstance = dataSet.getInstanceList().average()
-        self.__standardDeviationInstance = dataSet.getInstanceList().standardDeviation()
+        self.__average_instance = dataSet.getInstanceList().average()
+        self.__standard_deviation_instance = dataSet.getInstanceList().standardDeviation()
 
     cpdef convertInstance(self, Instance instance):
         """
@@ -37,10 +37,10 @@ cdef class Normalize(FeatureFilter):
         for i in range(instance.attributeSize()):
             if isinstance(instance.getAttribute(i), ContinuousAttribute):
                 xi = instance.getAttribute(i)
-                mi = self.__averageInstance.getAttribute(i)
-                si = self.__standardDeviationInstance.getAttribute(i)
+                mi = self.__average_instance.getAttribute(i)
+                si = self.__standard_deviation_instance.getAttribute(i)
                 if isinstance(xi, ContinuousAttribute):
                     xi.setValue((xi.getValue() - mi.getValue()) / si.getValue())
 
-    def convertDataDefinition(self):
+    cpdef convertDataDefinition(self):
         pass

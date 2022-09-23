@@ -1,6 +1,11 @@
 cdef class LinearPerceptronParameter(Parameter):
 
-    def __init__(self, seed: int, learningRate: float, etaDecrease: float, crossValidationRatio: float, epoch: int):
+    def __init__(self,
+                 seed: int,
+                 learningRate: float,
+                 etaDecrease: float,
+                 crossValidationRatio: float,
+                 epoch: int):
         """
         Parameters of the linear perceptron algorithm.
 
@@ -18,9 +23,9 @@ cdef class LinearPerceptronParameter(Parameter):
             Integer value for epoch number of the algorithm.
         """
         super().__init__(seed)
-        self.learningRate = learningRate
-        self.etaDecrease = etaDecrease
-        self.crossValidationRatio = crossValidationRatio
+        self.learning_rate = learningRate
+        self.eta_decrease = etaDecrease
+        self.cross_validation_ratio = crossValidationRatio
         self.__epoch = epoch
 
     cpdef double getLearningRate(self):
@@ -32,7 +37,7 @@ cdef class LinearPerceptronParameter(Parameter):
         float
             The learningRate.
         """
-        return self.learningRate
+        return self.learning_rate
 
     cpdef double getEtaDecrease(self):
         """
@@ -43,7 +48,7 @@ cdef class LinearPerceptronParameter(Parameter):
         float
             The etaDecrease.
         """
-        return self.etaDecrease
+        return self.eta_decrease
 
     cpdef double getCrossValidationRatio(self):
         """
@@ -54,7 +59,7 @@ cdef class LinearPerceptronParameter(Parameter):
         float
             The crossValidationRatio.
         """
-        return self.crossValidationRatio
+        return self.cross_validation_ratio
 
     cpdef int getEpoch(self):
         """

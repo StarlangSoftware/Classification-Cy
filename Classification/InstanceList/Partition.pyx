@@ -6,7 +6,10 @@ from Classification.Instance.Instance cimport Instance
 
 cdef class Partition(object):
 
-    def __init__(self, instanceList: InstanceList = None, ratio=None, seed=None, stratified: bool = None):
+    def __init__(self,
+                 instanceList: InstanceList = None,
+                 ratio=None, seed=None,
+                 stratified: bool = None):
         """
         Divides the instances in the instance list into partitions so that all instances of a class are grouped in a
         single partition.
@@ -18,20 +21,20 @@ cdef class Partition(object):
         seed
             seed is used as a random number.
         """
-        cdef list classLabels, counts, randomArray, valueList
-        cdef str classLabel
+        cdef list class_labels, counts, random_array, value_list
+        cdef str class_label
         cdef Instance instance
         cdef DiscreteDistribution distribution
-        cdef int i, classIndex, attributeIndex, attributeValue
-        cdef double splitValue
-        self.__multilist = []
+        cdef int i, class_index, attribute_index, attribute_value
+        cdef double split_value
+        self.__multi_list = []
         if instanceList is not None:
             if ratio is None:
-                classLabels = instanceList.getDistinctClassLabels()
-                for classLabel in classLabels:
-                    self.add(InstanceListOfSameClass(classLabel))
+                class_labels = instanceList.getDistinctClassLabels()
+                for class_label in class_labels:
+                    self.add(InstanceListOfSameClass(class_label))
                 for instance in instanceList.getInstances():
-                    self.get(classLabels.index(instance.getClassLabel())).add(instance)
+                    self.get(class_labels.index(instance.getClassLabel())).add(instance)
             else:
                 if isinstance(ratio, float):
                     self.add(InstanceList())
@@ -39,18 +42,18 @@ cdef class Partition(object):
                     if stratified:
                         distribution = instanceList.classDistribution()
                         counts = [0] * len(distribution)
-                        randomArray = [i for i in range(instanceList.size())]
+                        random_array = [i for i in range(instanceList.size())]
                         random.seed(seed)
-                        random.shuffle(randomArray)
+                        random.shuffle(random_array)
                         for i in range(instanceList.size()):
-                            instance = instanceList.get(randomArray[i])
-                            classIndex = distribution.getIndex(instance.getClassLabel())
-                            if counts[classIndex] < instanceList.size() * ratio * \
+                            instance = instanceList.get(random_array[i])
+                            class_index = distribution.getIndex(instance.getClassLabel())
+                            if counts[class_index] < instanceList.size() * ratio * \
                                     distribution.getProbability(instance.getClassLabel()):
                                 self.get(0).add(instance)
                             else:
                                 self.get(1).add(instance)
-                            counts[classIndex] = counts[classIndex] + 1
+                            counts[class_index] = counts[class_index] + 1
                     else:
                         instanceList.shuffle(seed)
                         for i in range(self.size()):
@@ -60,28 +63,28 @@ cdef class Partition(object):
                             else:
                                 self.get(1).add(instance)
                 elif isinstance(ratio, int):
-                    attributeIndex = ratio
+                    attribute_index = ratio
                     if seed is None:
-                        valueList = instanceList.getAttributeValueList(attributeIndex)
-                        for _ in valueList:
+                        value_list = instanceList.getAttributeValueList(attribute_index)
+                        for _ in value_list:
                             self.add(InstanceList())
                         for instance in instanceList.getInstances():
-                            self.get(valueList.index(instance.getAttribute(attributeIndex).getValue())).add(instance)
+                            self.get(value_list.index(instance.getAttribute(attribute_index).getValue())).add(instance)
                     elif isinstance(seed, int):
-                        attributeValue = seed
+                        attribute_value = seed
                         self.add(InstanceList())
                         self.add(InstanceList())
                         for instance in instanceList.getInstances():
-                            if instance.getAttribute(attributeIndex).getIndex() == attributeValue:
+                            if instance.getAttribute(attribute_index).getIndex() == attribute_value:
                                 self.get(0).add(instance)
                             else:
                                 self.get(1).add(instance)
                     elif isinstance(seed, float):
-                        splitValue = seed
+                        split_value = seed
                         self.add(InstanceList())
                         self.add(InstanceList())
                         for instance in instanceList.getInstances():
-                            if instance.getAttribute(attributeIndex).getValue() < splitValue:
+                            if instance.getAttribute(attribute_index).getValue() < split_value:
                                 self.get(0).add(instance)
                             else:
                                 self.get(1).add(instance)
@@ -95,7 +98,7 @@ cdef class Partition(object):
         _list : InstanceList
             Instance list to add.
         """
-        self.__multilist.append(_list)
+        self.__multi_list.append(_list)
 
     cpdef int size(self):
         """
@@ -106,7 +109,7 @@ cdef class Partition(object):
         int
             The size of the list of instance lists.
         """
-        return len(self.__multilist)
+        return len(self.__multi_list)
 
     cpdef InstanceList get(self, int index):
         """
@@ -122,7 +125,7 @@ cdef class Partition(object):
         InstanceList
             Instance list at given index of list of instance lists.
         """
-        return self.__multilist[index]
+        return self.__multi_list[index]
 
     cpdef list getLists(self):
         """
@@ -134,8 +137,8 @@ cdef class Partition(object):
             Instances of the items at the list of instance lists.
         """
         cdef list result
-        cdef InstanceList instanceList
+        cdef InstanceList instance_list
         result = []
-        for instanceList in self.__multilist:
-            result.append(instanceList.getInstances())
+        for instance_list in self.__multi_list:
+            result.append(instance_list.getInstances())
         return result

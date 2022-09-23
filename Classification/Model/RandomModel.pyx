@@ -15,7 +15,7 @@ cdef class RandomModel(Model):
         seed: int
             Seed of the random function
         """
-        self.__classLabels = classLabels
+        self.__class_labels = classLabels
         random.seed(seed)
 
     cpdef str predict(self, Instance instance):
@@ -33,20 +33,20 @@ cdef class RandomModel(Model):
         str
             The class label at the randomly selected index.
         """
-        cdef list possibleClassLabels
+        cdef list possible_class_labels
         cdef int size, index
         if isinstance(instance, CompositeInstance):
-            possibleClassLabels = instance.getPossibleClassLabels()
-            size = len(possibleClassLabels)
+            possible_class_labels = instance.getPossibleClassLabels()
+            size = len(possible_class_labels)
             index = random.randint(0, size)
-            return possibleClassLabels[index]
+            return possible_class_labels[index]
         else:
-            size = len(self.__classLabels)
+            size = len(self.__class_labels)
             index = random.randrange(size)
-            return self.__classLabels[index]
+            return self.__class_labels[index]
 
     cpdef dict predictProbability(self, Instance instance):
         result = {}
-        for classLabel in self.__classLabels:
-            result[classLabel] = 1.0 / len(self.__classLabels)
+        for classLabel in self.__class_labels:
+            result[classLabel] = 1.0 / len(self.__class_labels)
         return result

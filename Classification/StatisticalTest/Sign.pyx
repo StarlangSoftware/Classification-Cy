@@ -7,15 +7,19 @@ import math
 
 cdef class Sign(PairedTest):
 
-    cpdef int __binomial(self, int m, int n):
+    cpdef int __binomial(self,
+                         int m,
+                         int n):
         if n == 0 or m == n:
             return 1
         else:
             return math.factorial(m) // (math.factorial(n) * math.factorial(m - n))
 
-    cpdef StatisticalTestResult compare(self, ExperimentPerformance classifier1, ExperimentPerformance classifier2):
+    cpdef StatisticalTestResult compare(self,
+                                        ExperimentPerformance classifier1,
+                                        ExperimentPerformance classifier2):
         cdef int plus, minus, i, total
-        cdef double pValue
+        cdef double p_value
         if classifier1.numberOfExperiments() != classifier2.numberOfExperiments():
             raise StatisticalTestNotApplicable("In order to apply a paired test, you need to have the same number of "
                                                "experiments in both algorithms.")
@@ -28,9 +32,9 @@ cdef class Sign(PairedTest):
                 if classifier1.getErrorRate(i) > classifier2.getErrorRate(i):
                     minus = minus + 1
         total = plus + minus
-        pValue = 0
+        p_value = 0
         if total == 0:
             raise StatisticalTestNotApplicable("Variance is 0.")
         for i in range(plus + 1):
-            pValue += self.__binomial(total, i) / math.pow(2, total)
-        return StatisticalTestResult(pValue, False)
+            p_value += self.__binomial(total, i) / math.pow(2, total)
+        return StatisticalTestResult(p_value, False)

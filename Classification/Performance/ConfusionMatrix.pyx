@@ -12,10 +12,12 @@ cdef class ConfusionMatrix:
         classLabels : list
             list of String.
         """
-        self.__classLabels = classLabels
+        self.__class_labels = classLabels
         self.__matrix = {}
 
-    cpdef classify(self, str actualClass, str predictedClass):
+    cpdef classify(self,
+                   str actualClass,
+                   str predictedClass):
         """
         The classify method takes two Strings; actual class and predicted class as inputs. If the matrix dictionary
         contains given actual class String as a key, it then assigns the corresponding object of that key to a
@@ -30,13 +32,13 @@ cdef class ConfusionMatrix:
         predictedClass : str
             String input predicted class.
         """
-        cdef CounterHashMap counterHashMap
+        cdef CounterHashMap counter_hash_map
         if actualClass in self.__matrix:
-            counterHashMap = self.__matrix[actualClass]
+            counter_hash_map = self.__matrix[actualClass]
         else:
-            counterHashMap = CounterHashMap()
-        counterHashMap.put(predictedClass)
-        self.__matrix[actualClass] = counterHashMap
+            counter_hash_map = CounterHashMap()
+        counter_hash_map.put(predictedClass)
+        self.__matrix[actualClass] = counter_hash_map
 
     cpdef addConfusionMatrix(self, ConfusionMatrix confusionMatrix):
         """
@@ -49,16 +51,16 @@ cdef class ConfusionMatrix:
         confusionMatrix : ConfusionMatrix
             ConfusionMatrix input.
         """
-        cdef str actualClass
-        cdef CounterHashMap rowToBeAdded, currentRow
-        for actualClass in confusionMatrix.__matrix:
-            rowToBeAdded = confusionMatrix.__matrix[actualClass]
-            if actualClass in self.__matrix:
-                currentRow = self.__matrix[actualClass]
-                currentRow.add(rowToBeAdded)
-                self.__matrix[actualClass] = currentRow
+        cdef str actual_class
+        cdef CounterHashMap row_to_be_added, current_row
+        for actual_class in confusionMatrix.__matrix:
+            row_to_be_added = confusionMatrix.__matrix[actual_class]
+            if actual_class in self.__matrix:
+                current_row = self.__matrix[actual_class]
+                current_row.add(row_to_be_added)
+                self.__matrix[actual_class] = current_row
             else:
-                self.__matrix[actualClass] = rowToBeAdded
+                self.__matrix[actual_class] = row_to_be_added
 
     cpdef double sumOfElements(self):
         """
@@ -71,10 +73,10 @@ cdef class ConfusionMatrix:
             The summation of values.
         """
         cdef double result
-        cdef str actualClass
+        cdef str actual_class
         result = 0
-        for actualClass in self.__matrix:
-            result += self.__matrix[actualClass].sumOfCounts()
+        for actual_class in self.__matrix:
+            result += self.__matrix[actual_class].sumOfCounts()
         return result
 
     cpdef double trace(self):
@@ -88,11 +90,11 @@ cdef class ConfusionMatrix:
             Summation of values.
         """
         cdef double result
-        cdef str actualClass
+        cdef str actual_class
         result = 0
-        for actualClass in self.__matrix:
-            if actualClass in self.__matrix[actualClass]:
-                result += self.__matrix[actualClass][actualClass]
+        for actual_class in self.__matrix:
+            if actual_class in self.__matrix[actual_class]:
+                result += self.__matrix[actual_class][actual_class]
         return result
 
     cpdef double columnSum(self, str predictedClass):
@@ -111,11 +113,11 @@ cdef class ConfusionMatrix:
             Summation of values.
         """
         cdef double result
-        cdef str actualClass
+        cdef str actual_class
         result = 0
-        for actualClass in self.__matrix:
-            if predictedClass in self.__matrix[actualClass]:
-                result += self.__matrix[actualClass][predictedClass]
+        for actual_class in self.__matrix:
+            if predictedClass in self.__matrix[actual_class]:
+                result += self.__matrix[actual_class][predictedClass]
         return result
 
     cpdef double getAccuracy(self):
@@ -141,12 +143,12 @@ cdef class ConfusionMatrix:
         """
         cdef list result
         cdef int i
-        cdef str actualClass
+        cdef str actual_class
         result = []
-        for i in range(len(self.__classLabels)):
-            actualClass = self.__classLabels[i]
-            if actualClass in self.__matrix:
-                result.append(self.__matrix[actualClass][actualClass] / self.columnSum(actualClass))
+        for i in range(len(self.__class_labels)):
+            actual_class = self.__class_labels[i]
+            if actual_class in self.__matrix:
+                result.append(self.__matrix[actual_class][actual_class] / self.columnSum(actual_class))
         return result
 
     cpdef list recall(self):
@@ -161,12 +163,12 @@ cdef class ConfusionMatrix:
         """
         cdef list result
         cdef int i
-        cdef str actualClass
+        cdef str actual_class
         result = []
-        for i in range(len(self.__classLabels)):
-            actualClass = self.__classLabels[i]
-            if actualClass in self.__matrix:
-                result.append(self.__matrix[actualClass][actualClass] / self.__matrix[actualClass].sumOfCounts())
+        for i in range(len(self.__class_labels)):
+            actual_class = self.__class_labels[i]
+            if actual_class in self.__matrix:
+                result.append(self.__matrix[actual_class][actual_class] / self.__matrix[actual_class].sumOfCounts())
         return result
 
     cpdef list fMeasure(self):
@@ -184,7 +186,7 @@ cdef class ConfusionMatrix:
         precision = self.precision()
         recall = self.recall()
         result = []
-        for i in range(len(self.__classLabels)):
+        for i in range(len(self.__class_labels)):
             result.append(2 / (1 / precision[i] + 1 / recall[i]))
         return result
 
@@ -200,11 +202,11 @@ cdef class ConfusionMatrix:
         """
         cdef double total
         cdef int i
-        cdef str actualClass
-        cdef list fMeasure
-        fMeasure = self.fMeasure()
+        cdef str actual_class
+        cdef list f_measure
+        f_measure = self.fMeasure()
         total = 0
-        for i in range(len(self.__classLabels)):
-            actualClass = self.__classLabels[i]
-            total += fMeasure[i] * self.__matrix[actualClass].sumOfCounts()
+        for i in range(len(self.__class_labels)):
+            actual_class = self.__class_labels[i]
+            total += f_measure[i] * self.__matrix[actual_class].sumOfCounts()
         return total / self.sumOfElements()

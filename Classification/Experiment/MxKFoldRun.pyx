@@ -34,10 +34,14 @@ cdef class MxKFoldRun(KFoldRun):
         """
         cdef ExperimentPerformance result
         cdef int j
-        cdef KFoldCrossValidation crossValidation
+        cdef KFoldCrossValidation cross_validation
         result = ExperimentPerformance()
         for j in range(self.M):
-            crossValidation = KFoldCrossValidation(experiment.getDataSet().getInstances(), self.K,
-                                                   experiment.getParameter().getSeed())
-            self.runExperiment(experiment.getClassifier(), experiment.getParameter(), result, crossValidation)
+            cross_validation = KFoldCrossValidation(instance_list=experiment.getDataSet().getInstances(),
+                                                   K=self.K,
+                                                   seed=experiment.getParameter().getSeed())
+            self.runExperiment(classifier=experiment.getClassifier(),
+                               parameter=experiment.getParameter(),
+                               experimentPerformance=result,
+                               crossValidation=cross_validation)
         return result

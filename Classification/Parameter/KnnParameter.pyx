@@ -6,7 +6,10 @@ cdef class KnnParameter(KMeansParameter):
 
     cdef int __k
 
-    def __init__(self, seed: int, k: int, distanceMetric=EuclidianDistance()):
+    def __init__(self,
+                 seed: int,
+                 k: int,
+                 distanceMetric=EuclidianDistance()):
         """
         Parameters of the K-nearest neighbor classifier.
 

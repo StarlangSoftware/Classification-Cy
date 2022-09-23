@@ -7,7 +7,9 @@ from Math.Distribution cimport Distribution
 
 cdef class Combined5x2F(PairedTest):
 
-    cpdef __testStatistic(self, ExperimentPerformance classifier1, ExperimentPerformance classifier2):
+    cpdef __testStatistic(self,
+                          ExperimentPerformance classifier1,
+                          ExperimentPerformance classifier2):
         cdef list difference
         cdef double numerator, denominator, mean, variance
         cdef int i
@@ -32,10 +34,14 @@ cdef class Combined5x2F(PairedTest):
             raise StatisticalTestNotApplicable("Variance is 0.")
         return numerator / denominator
 
-    cpdef StatisticalTestResult compare(self, ExperimentPerformance classifier1, ExperimentPerformance classifier2):
+    cpdef StatisticalTestResult compare(self,
+                                        ExperimentPerformance classifier1,
+                                        ExperimentPerformance classifier2):
         cdef double statistic
-        cdef int degreeOfFreedom1, degreeOfFreedom2
+        cdef int degree_of_freedom1, degree_of_freedom2
         statistic = self.__testStatistic(classifier1, classifier2)
-        degreeOfFreedom1 = classifier1.numberOfExperiments()
-        degreeOfFreedom2 = classifier2.numberOfExperiments() // 2
-        return StatisticalTestResult(Distribution.fDistribution(statistic, degreeOfFreedom1, degreeOfFreedom2), True)
+        degree_of_freedom1 = classifier1.numberOfExperiments()
+        degree_of_freedom2 = classifier2.numberOfExperiments() // 2
+        return StatisticalTestResult(Distribution.fDistribution(F=statistic,
+                                                                freedom1=degree_of_freedom1,
+                                                                freedom2=degree_of_freedom2), True)

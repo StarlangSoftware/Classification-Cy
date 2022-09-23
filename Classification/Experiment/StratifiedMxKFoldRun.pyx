@@ -6,7 +6,9 @@ from Classification.Performance.ExperimentPerformance cimport ExperimentPerforma
 
 cdef class StratifiedMxKFoldRun(MxKFoldRun):
 
-    def __init__(self, M: int, K: int):
+    def __init__(self,
+                 M: int,
+                 K: int):
         """
         Constructor for StratifiedMxKFoldRun class. Basically sets K parameter of the K-fold cross-validation and M for
         the number of times.
@@ -37,10 +39,14 @@ cdef class StratifiedMxKFoldRun(MxKFoldRun):
         """
         cdef ExperimentPerformance result
         cdef int j
-        cdef StratifiedKFoldCrossValidation crossValidation
+        cdef StratifiedKFoldCrossValidation cross_validation
         result = ExperimentPerformance()
         for j in range(self.M):
-            crossValidation = StratifiedKFoldCrossValidation(experiment.getDataSet().getClassInstances(), self.K,
-                                                             experiment.getParameter().getSeed())
-            self.runExperiment(experiment.getClassifier(), experiment.getParameter(), result, crossValidation)
+            cross_validation = StratifiedKFoldCrossValidation(instance_lists=experiment.getDataSet().getClassInstances(),
+                                                             K=self.K,
+                                                             seed=experiment.getParameter().getSeed())
+            self.runExperiment(classifier=experiment.getClassifier(),
+                               parameter=experiment.getParameter(),
+                               experimentPerformance=result,
+                               crossValidation=cross_validation)
         return result

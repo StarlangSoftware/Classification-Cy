@@ -4,7 +4,10 @@ from Math.Vector cimport Vector
 
 cdef class LdaModel(GaussianModel):
 
-    def __init__(self, priorDistribution: DiscreteDistribution, w: dict, w0: dict):
+    def __init__(self,
+                 priorDistribution: DiscreteDistribution,
+                 w: dict,
+                 w0: dict):
         """
         A constructor which sets the priorDistribution, w and w0 according to given inputs.
 
@@ -17,11 +20,13 @@ cdef class LdaModel(GaussianModel):
         w0 : dict
             Dict of String and float.
         """
-        self.priorDistribution = priorDistribution
+        self.prior_distribution = priorDistribution
         self.w = w
         self.w0 = w0
 
-    cpdef double calculateMetric(self, Instance instance, str Ci):
+    cpdef double calculateMetric(self,
+                                 Instance instance,
+                                 str Ci):
         """
         The calculateMetric method takes an Instance and a String as inputs. It returns the dot product of given
         Instance and wi plus w0i.

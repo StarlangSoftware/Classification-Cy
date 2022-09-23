@@ -1,6 +1,9 @@
 cdef class CompositeInstance(Instance):
 
-    def __init__(self, classLabel: str, attributes=None, possibleLabels=None):
+    def __init__(self,
+                 classLabel: str,
+                 attributes=None,
+                 possibleLabels=None):
         """
         Constructor of CompositeInstance class which takes a class label, attributes and a list of
         possible labels as inputs. It generates a new composite instance with given labels, attributes and possible
@@ -18,7 +21,7 @@ cdef class CompositeInstance(Instance):
         super().__init__(classLabel, attributes)
         if possibleLabels is None:
             possibleLabels = []
-        self.__possibleClassLabels = possibleLabels
+        self.__possible_class_labels = possibleLabels
 
     cpdef list getPossibleClassLabels(self):
         """
@@ -29,7 +32,7 @@ cdef class CompositeInstance(Instance):
         list
             Possible class labels of the composite instance.
         """
-        return self.__possibleClassLabels
+        return self.__possible_class_labels
 
     cpdef setPossibleClassLabels(self, list possibleClassLabels):
         """
@@ -40,7 +43,7 @@ cdef class CompositeInstance(Instance):
         possibleClassLabels
             Ner value of possible class labels.
         """
-        self.__possibleClassLabels = possibleClassLabels
+        self.__possible_class_labels = possibleClassLabels
 
     def __str__(self) -> str:
         """
@@ -51,8 +54,8 @@ cdef class CompositeInstance(Instance):
         str
             String representation of possible class labels.
         """
-        cdef str result, possibleClassLabel
+        cdef str result, possible_class_label
         result = super().__str__()
-        for possibleClassLabel in self.__possibleClassLabels:
-            result = result + ";" + possibleClassLabel
+        for possible_class_label in self.__possible_class_labels:
+            result = result + ";" + possible_class_label
         return result

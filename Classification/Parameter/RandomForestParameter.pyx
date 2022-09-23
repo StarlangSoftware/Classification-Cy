@@ -1,6 +1,9 @@
 cdef class RandomForestParameter(BaggingParameter):
 
-    def __init__(self, seed: int, ensembleSize: int, attributeSubsetSize: int):
+    def __init__(self,
+                 seed: int,
+                 ensembleSize: int,
+                 attributeSubsetSize: int):
         """
         Parameters of the random forest classifier.
 
@@ -14,7 +17,7 @@ cdef class RandomForestParameter(BaggingParameter):
             Integer value for the size of attribute subset.
         """
         super().__init__(seed, ensembleSize)
-        self.__attributeSubsetSize = attributeSubsetSize
+        self.__attribute_subset_size = attributeSubsetSize
 
     cpdef int getAttributeSubsetSize(self):
         """
@@ -25,4 +28,4 @@ cdef class RandomForestParameter(BaggingParameter):
         int
             The attributeSubsetSize.
         """
-        return self.__attributeSubsetSize
+        return self.__attribute_subset_size

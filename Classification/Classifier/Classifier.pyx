@@ -6,7 +6,9 @@ from Classification.Performance.DetailedClassificationPerformance cimport Detail
 
 cdef class Classifier(object):
 
-    cpdef train(self, InstanceList trainSet, Parameter parameters):
+    cpdef train(self,
+                InstanceList trainSet,
+                Parameter parameters):
         pass
 
     cpdef bint discreteCheck(self, Instance instance):
@@ -43,18 +45,21 @@ cdef class Classifier(object):
         Performance
             The accuracy (and error) of the model as an instance of Performance class.
         """
-        cdef list classLabels
+        cdef list class_labels
         cdef ConfusionMatrix confusion
         cdef int i
         cdef Instance instance
-        classLabels = testSet.getUnionOfPossibleClassLabels()
-        confusion = ConfusionMatrix(classLabels)
+        class_labels = testSet.getUnionOfPossibleClassLabels()
+        confusion = ConfusionMatrix(class_labels)
         for i in range(testSet.size()):
             instance = testSet.get(i)
             confusion.classify(instance.getClassLabel(), self.model.predict(instance))
         return DetailedClassificationPerformance(confusion)
 
-    cpdef Performance singleRun(self, Parameter parameter, InstanceList trainSet, InstanceList testSet):
+    cpdef Performance singleRun(self,
+                                Parameter parameter,
+                                InstanceList trainSet,
+                                InstanceList testSet):
         """
         Runs current classifier with the given train and test data.
 

@@ -8,7 +8,9 @@ from Classification.Performance.Performance cimport Performance
 
 cdef class AutoEncoder(Classifier):
 
-    cpdef train(self, InstanceList trainSet, Parameter parameters):
+    cpdef train(self,
+                InstanceList trainSet,
+                Parameter parameters):
         """
         Training algorithm for auto encoders. An auto encoder is a neural network which attempts to replicate its input
         at its output.
@@ -21,8 +23,13 @@ cdef class AutoEncoder(Classifier):
             Parameters of the auto encoder.
         """
         cdef Partition partition
-        partition = Partition(trainSet, 0.2, parameters.getSeed(), True)
-        self.model = AutoEncoderModel(partition.get(1), partition.get(0), parameters)
+        partition = Partition(instanceList=trainSet,
+                              ratio=0.2,
+                              seed=parameters.getSeed(),
+                              stratified=True)
+        self.model = AutoEncoderModel(trainSet=partition.get(1),
+                                      validationSet=partition.get(0),
+                                      parameters=parameters)
 
     cpdef Performance test(self, InstanceList testSet):
         """

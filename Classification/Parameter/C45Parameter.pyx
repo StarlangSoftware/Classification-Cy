@@ -4,9 +4,12 @@ from Classification.Parameter.Parameter cimport Parameter
 cdef class C45Parameter(Parameter):
 
     cdef bint __prune
-    cdef double __crossValidationRatio
+    cdef double __cross_validation_ratio
 
-    def __init__(self, seed: int, prune: bool, crossValidationRatio: float):
+    def __init__(self,
+                 seed: int,
+                 prune: bool,
+                 crossValidationRatio: float):
         """
         Parameters of the C4.5 univariate decision tree classifier.
 
@@ -21,7 +24,7 @@ cdef class C45Parameter(Parameter):
         """
         super().__init__(seed)
         self.__prune = prune
-        self.__crossValidationRatio = crossValidationRatio
+        self.__cross_validation_ratio = crossValidationRatio
 
     cpdef bint isPrune(self):
         """
@@ -43,4 +46,4 @@ cdef class C45Parameter(Parameter):
         float
             crossValidationRatio.
         """
-        return self.__crossValidationRatio
+        return self.__cross_validation_ratio

@@ -6,7 +6,9 @@ from Classification.Parameter.Parameter cimport Parameter
 
 cdef class RandomClassifier(Classifier):
 
-    cpdef train(self, InstanceList trainSet, Parameter parameters):
+    cpdef train(self,
+                InstanceList trainSet,
+                Parameter parameters):
         """
         Training algorithm for random classifier.
 
@@ -15,4 +17,5 @@ cdef class RandomClassifier(Classifier):
         trainSet : InstanceList
             Training data given to the algorithm.
         """
-        self.model = RandomModel(list(trainSet.classDistribution().keys()), parameters.getSeed())
+        self.model = RandomModel(classLabels=list(trainSet.classDistribution().keys()),
+                                 seed=parameters.getSeed())

@@ -5,7 +5,7 @@ from Classification.Model.ValidatedModel cimport ValidatedModel
 
 cdef class GaussianModel(ValidatedModel):
 
-    cdef DiscreteDistribution priorDistribution
+    cdef DiscreteDistribution prior_distribution
 
     cpdef double calculateMetric(self, Instance instance, str Ci)
     cpdef str predict(self, Instance instance)

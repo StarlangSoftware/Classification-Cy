@@ -4,7 +4,7 @@ from Classification.Instance.Instance cimport Instance
 
 cdef class DecisionCondition(object):
 
-    cdef int __attributeIndex
+    cdef int __attribute_index
     cdef str __comparison
     cdef Attribute __value
 

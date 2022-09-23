@@ -15,7 +15,7 @@ cdef class BaggingParameter(Parameter):
             The number of trees in the bagged forest.
         """
         super().__init__(seed)
-        self.ensembleSize = ensembleSize
+        self.ensemble_size = ensembleSize
 
     cpdef int getEnsembleSize(self):
         """
@@ -26,4 +26,4 @@ cdef class BaggingParameter(Parameter):
         int
             The ensemble size.
         """
-        return self.ensembleSize
+        return self.ensemble_size

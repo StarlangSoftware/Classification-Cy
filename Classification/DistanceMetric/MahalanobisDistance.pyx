@@ -20,7 +20,9 @@ cdef class MahalanobisDistance(DistanceMetric):
         """
         self.__covarianceInverse = covarianceInverse
 
-    cpdef double distance(self, Instance instance1, Instance instance2):
+    cpdef double distance(self,
+                          Instance instance1,
+                          Instance instance2):
         """
         Calculates Mahalanobis distance between two instances. (x^(1) - x^(2)) S (x^(1) - x^(2))^T
 

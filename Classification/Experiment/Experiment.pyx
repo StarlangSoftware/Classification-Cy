@@ -1,6 +1,9 @@
 cdef class Experiment(object):
 
-    def __init__(self, classifier: Classifier, parameter: Parameter, dataSet: DataSet):
+    def __init__(self,
+                 classifier: Classifier,
+                 parameter: Parameter,
+                 dataSet: DataSet):
         """
         Constructor for a specific machine learning experiment
 
@@ -64,4 +67,6 @@ cdef class Experiment(object):
         Experiment
             Experiment constructed
         """
-        return Experiment(self.__classifier, self.__parameter, self.__dataSet.getSubSetOfFeatures(featureSubSet))
+        return Experiment(classifier=self.__classifier,
+                          parameter=self.__parameter,
+                          dataSet=self.__dataSet.getSubSetOfFeatures(featureSubSet))

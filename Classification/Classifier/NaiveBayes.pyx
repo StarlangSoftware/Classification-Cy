@@ -11,7 +11,9 @@ from Classification.Parameter.Parameter cimport Parameter
 
 cdef class NaiveBayes(Classifier):
 
-    cpdef trainContinuousVersion(self, DiscreteDistribution priorDistribution, Partition classLists):
+    cpdef trainContinuousVersion(self,
+                                 DiscreteDistribution priorDistribution,
+                                 Partition classLists):
         """
         Training algorithm for Naive Bayes algorithm with a continuous data set.
 
@@ -22,23 +24,25 @@ cdef class NaiveBayes(Classifier):
         classLists : Partition
             Instances are divided into K lists, where each list contains only instances from a single class
         """
-        cdef dict classMeans, classDeviations
+        cdef dict class_means, class_deviations
         cdef int i
-        cdef str classLabel
-        cdef Vector averageVector, standardDeviationVector
-        classMeans = {}
-        classDeviations = {}
+        cdef str class_label
+        cdef Vector average_vector, standard_deviation_vector
+        class_means = {}
+        class_deviations = {}
         for i in range(classLists.size()):
-            classLabel = classLists.get(i).getClassLabel()
-            averageVector = classLists.get(i).average().toVector()
-            classMeans[classLabel] = averageVector
-            standardDeviationVector = classLists.get(i).standardDeviation().toVector()
-            classDeviations[classLabel] = standardDeviationVector
+            class_label = classLists.get(i).getClassLabel()
+            average_vector = classLists.get(i).average().toVector()
+            class_means[class_label] = average_vector
+            standard_deviation_vector = classLists.get(i).standardDeviation().toVector()
+            class_deviations[class_label] = standard_deviation_vector
         self.model = NaiveBayesModel(priorDistribution)
         if isinstance(self.model, NaiveBayesModel):
-            self.model.initForContinuous(classMeans, classDeviations)
+            self.model.initForContinuous(class_means, class_deviations)
 
-    cpdef trainDiscreteVersion(self, DiscreteDistribution priorDistribution, Partition classLists):
+    cpdef trainDiscreteVersion(self,
+                               DiscreteDistribution priorDistribution,
+                               Partition classLists):
         """
         Training algorithm for Naive Bayes algorithm with a discrete data set.
 
@@ -49,17 +53,19 @@ cdef class NaiveBayes(Classifier):
         classLists : Partition
             Instances are divided into K lists, where each list contains only instances from a single class
         """
-        cdef dict classAttributeDistributions
+        cdef dict class_attribute_distributions
         cdef int i
-        classAttributeDistributions = {}
+        class_attribute_distributions = {}
         for i in range(classLists.size()):
-            classAttributeDistributions[classLists.get(i).getClassLabel()] = \
+            class_attribute_distributions[classLists.get(i).getClassLabel()] = \
                 classLists.get(i).allAttributesDistribution()
         self.model = NaiveBayesModel(priorDistribution)
         if isinstance(self.model, NaiveBayesModel):
-            self.model.initForDiscrete(classAttributeDistributions)
+            self.model.initForDiscrete(class_attribute_distributions)
 
-    cpdef train(self, InstanceList trainSet, Parameter parameters):
+    cpdef train(self,
+                InstanceList trainSet,
+                Parameter parameters):
         """
         Training algorithm for Naive Bayes algorithm. It basically calls trainContinuousVersion for continuous data
         sets, trainDiscreteVersion for discrete data sets.
@@ -69,11 +75,11 @@ cdef class NaiveBayes(Classifier):
         trainSet : InstanceList
             Training data given to the algorithm
         """
-        cdef DiscreteDistribution priorDistribution
-        cdef Partition classLists
-        priorDistribution = trainSet.classDistribution()
-        classLists = Partition(trainSet)
-        if isinstance(classLists.get(0).get(0).getAttribute(0), DiscreteAttribute):
-            self.trainDiscreteVersion(priorDistribution, classLists)
+        cdef DiscreteDistribution prior_distribution
+        cdef Partition class_lists
+        prior_distribution = trainSet.classDistribution()
+        class_lists = Partition(trainSet)
+        if isinstance(class_lists.get(0).get(0).getAttribute(0), DiscreteAttribute):
+            self.trainDiscreteVersion(prior_distribution, class_lists)
         else:
-            self.trainContinuousVersion(priorDistribution, classLists)
+            self.trainContinuousVersion(prior_distribution, class_lists)

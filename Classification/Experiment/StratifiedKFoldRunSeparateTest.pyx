@@ -32,14 +32,21 @@ cdef class StratifiedKFoldRunSeparateTest(KFoldRunSeparateTest):
             An ExperimentPerformance instance.
         """
         cdef ExperimentPerformance result
-        cdef InstanceList instanceList
+        cdef InstanceList instance_list
         cdef Partition partition
-        cdef StratifiedKFoldCrossValidation crossValidation
+        cdef StratifiedKFoldCrossValidation cross_validation
         result = ExperimentPerformance()
-        instanceList = experiment.getDataSet().getInstanceList()
-        partition = Partition(instanceList, 0.25, experiment.getParameter().getSeed(), True)
-        crossValidation = StratifiedKFoldCrossValidation(Partition(partition.get(1)).getLists(), self.K,
-                                                         experiment.getParameter().getSeed())
-        self.runExperimentSeparate(experiment.getClassifier(), experiment.getParameter(), result, crossValidation,
-                           partition.get(0))
+        instance_list = experiment.getDataSet().getInstanceList()
+        partition = Partition(instanceList=instance_list,
+                              ratio=0.25,
+                              seed=experiment.getParameter().getSeed(),
+                              stratified=True)
+        cross_validation = StratifiedKFoldCrossValidation(instance_lists=Partition(partition.get(1)).getLists(),
+                                                          K=self.K,
+                                                          seed=experiment.getParameter().getSeed())
+        self.runExperimentSeparate(classifier=experiment.getClassifier(),
+                                   parameter=experiment.getParameter(),
+                                   experimentPerformance=result,
+                                   crossValidation=cross_validation,
+                                   testSet=partition.get(0))
         return result

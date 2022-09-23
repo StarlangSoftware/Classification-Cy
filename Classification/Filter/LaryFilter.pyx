@@ -14,9 +14,11 @@ cdef class LaryFilter(FeatureFilter):
             DataSet that will bu used.
         """
         super().__init__(dataSet)
-        self.attributeDistributions = dataSet.getInstanceList().allAttributesDistribution()
+        self.attribute_distributions = dataSet.getInstanceList().allAttributesDistribution()
 
-    cpdef removeDiscreteAttributesFromInstance(self, Instance instance, int size):
+    cpdef removeDiscreteAttributesFromInstance(self,
+                                               Instance instance,
+                                               int size):
         """
         The removeDiscreteAttributesFromInstance method takes an Instance as an input, and removes the discrete
         attributes from given instance.
@@ -31,7 +33,7 @@ cdef class LaryFilter(FeatureFilter):
         cdef int k, i
         k = 0
         for i in range(size):
-            if len(self.attributeDistributions[i]) > 0:
+            if len(self.attribute_distributions[i]) > 0:
                 instance.removeAttribute(k)
             else:
                 k = k + 1
@@ -45,12 +47,12 @@ cdef class LaryFilter(FeatureFilter):
         size : int
             Size of item that attributes will be removed.
         """
-        cdef DataDefinition dataDefinition
+        cdef DataDefinition data_definition
         cdef int k, i
-        dataDefinition = self.dataSet.getDataDefinition()
+        data_definition = self.dataSet.getDataDefinition()
         k = 0
         for i in range(size):
-            if len(self.attributeDistributions[i]) > 0:
-                dataDefinition.removeAttribute(k)
+            if len(self.attribute_distributions[i]) > 0:
+                data_definition.removeAttribute(k)
             else:
                 k = k + 1

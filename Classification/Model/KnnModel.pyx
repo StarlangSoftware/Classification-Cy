@@ -21,7 +21,7 @@ cdef class KnnModel(Model):
         """
         self.__data = data
         self.__k = k
-        self.__distanceMetric = distanceMetric
+        self.__distance_metric = distanceMetric
 
     cpdef str predict(self, Instance instance):
         """
@@ -38,19 +38,19 @@ cdef class KnnModel(Model):
         str
             The first possible class label as the predicted class.
         """
-        cdef InstanceList nearestNeighbors
-        cdef str predictedClass
-        nearestNeighbors = self.nearestNeighbors(instance)
-        if isinstance(instance, CompositeInstance) and nearestNeighbors.size() == 0:
-            predictedClass = instance.getPossibleClassLabels()[0]
+        cdef InstanceList nearest_neighbors
+        cdef str predicted_class
+        nearest_neighbors = self.nearestNeighbors(instance)
+        if isinstance(instance, CompositeInstance) and nearest_neighbors.size() == 0:
+            predicted_class = instance.getPossibleClassLabels()[0]
         else:
-            predictedClass = Model.getMaximum(nearestNeighbors.getClassLabels())
-        return predictedClass
+            predicted_class = Model.getMaximum(nearest_neighbors.getClassLabels())
+        return predicted_class
 
     cpdef dict predictProbability(self, Instance instance):
-        cdef InstanceList nearestNeighbors
-        nearestNeighbors = self.nearestNeighbors(instance)
-        return nearestNeighbors.classDistribution().getProbabilityDistribution()
+        cdef InstanceList nearest_neighbors
+        nearest_neighbors = self.nearestNeighbors(instance)
+        return nearest_neighbors.classDistribution().getProbabilityDistribution()
 
     def makeComparator(self):
         def compare(instanceA: KnnInstance, instanceB: KnnInstance):
@@ -80,17 +80,17 @@ cdef class KnnModel(Model):
             The first k instances which are nearest to the given instance as an InstanceList.
         """
         cdef InstanceList result
-        cdef list instances, possibleClassLabels
+        cdef list instances, possible_class_labels
         cdef int i
         result = InstanceList()
         instances = []
-        possibleClassLabels = []
+        possible_class_labels = []
         if isinstance(instance, CompositeInstance):
-            possibleClassLabels = instance.getPossibleClassLabels()
+            possible_class_labels = instance.getPossibleClassLabels()
         for i in range(self.__data.size()):
-            if not isinstance(instance, CompositeInstance) or self.__data.get(i).getClassLabel() in possibleClassLabels:
-                instances.append(KnnInstance(self.__data.get(i), self.__distanceMetric.distance(self.__data.get(i),
-                                                                                                instance)))
+            if not isinstance(instance, CompositeInstance) or self.__data.get(i).getClassLabel() in possible_class_labels:
+                instances.append(KnnInstance(self.__data.get(i), self.__distance_metric.distance(self.__data.get(i),
+                                                                                                 instance)))
         instances.sort(key=cmp_to_key(self.makeComparator()))
         for i in range(min(self.__k, len(instances))):
             result.add(instances[i].getInstance())

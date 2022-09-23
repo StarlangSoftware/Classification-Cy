@@ -7,7 +7,9 @@ from Classification.Parameter.Parameter cimport Parameter
 
 cdef class MultiLayerPerceptron(Classifier):
 
-    cpdef train(self, InstanceList trainSet, Parameter parameters):
+    cpdef train(self,
+                InstanceList trainSet,
+                Parameter parameters):
         """
         Training algorithm for the multilayer perceptron algorithm. 20 percent of the data is separated as
         cross-validation data used for selecting the best weights. 80 percent of the data is used for training the
@@ -21,5 +23,10 @@ cdef class MultiLayerPerceptron(Classifier):
             Parameters of the multilayer perceptron.
         """
         cdef Partition partition
-        partition = Partition(trainSet, parameters.getCrossValidationRatio(), parameters.getSeed(), True)
-        self.model = MultiLayerPerceptronModel(partition.get(1), partition.get(0), parameters)
+        partition = Partition(instanceList=trainSet,
+                              ratio=parameters.getCrossValidationRatio(),
+                              seed=parameters.getSeed(),
+                              stratified=True)
+        self.model = MultiLayerPerceptronModel(trainSet=partition.get(1),
+                                               validationSet=partition.get(0),
+                                               parameters=parameters)

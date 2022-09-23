@@ -4,6 +4,6 @@ from Classification.Performance.ConfusionMatrix cimport ConfusionMatrix
 
 cdef class DetailedClassificationPerformance(ClassificationPerformance):
 
-    cdef ConfusionMatrix __confusionMatrix
+    cdef ConfusionMatrix __confusion_matrix
 
     cpdef ConfusionMatrix getConfusionMatrix(self)

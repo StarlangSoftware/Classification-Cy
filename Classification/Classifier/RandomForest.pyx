@@ -9,7 +9,9 @@ from Sampling.Bootstrap cimport Bootstrap
 
 cdef class RandomForest(Classifier):
 
-    cpdef train(self, InstanceList trainSet, Parameter parameters):
+    cpdef train(self,
+                InstanceList trainSet,
+                Parameter parameters):
         """
         Training algorithm for random forest classifier. Basically the algorithm creates K distinct decision trees from
         K bootstrap samples of the original training set.
@@ -21,14 +23,16 @@ cdef class RandomForest(Classifier):
         parameters : RandomForestParameter
             Parameters of the bagging trees algorithm. ensembleSize returns the number of trees in the random forest.
         """
-        cdef int forestSize, i
+        cdef int forest_size, i
         cdef list forest
         cdef Bootstrap bootstrap
         cdef DecisionTree tree
-        forestSize = parameters.getEnsembleSize()
+        forest_size = parameters.getEnsembleSize()
         forest = []
-        for i in range(forestSize):
+        for i in range(forest_size):
             bootstrap = trainSet.bootstrap(i)
-            tree = DecisionTree(DecisionNode(InstanceList(bootstrap.getSample()), None, parameters, False))
+            tree = DecisionTree(DecisionNode(data=InstanceList(bootstrap.getSample()),
+                                             parameter=parameters,
+                                             isStump=False))
             forest.append(tree)
         self.model = TreeEnsembleModel(forest)

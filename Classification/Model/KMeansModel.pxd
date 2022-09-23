@@ -6,8 +6,8 @@ from Classification.Model.GaussianModel cimport GaussianModel
 
 cdef class KMeansModel(GaussianModel):
 
-    cdef InstanceList __classMeans
-    cdef DistanceMetric __distanceMetric
+    cdef InstanceList __class_means
+    cdef DistanceMetric __distance_metric
 
     cpdef double calculateMetric(self, Instance instance, str Ci)
 

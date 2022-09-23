@@ -33,9 +33,13 @@ cdef class StratifiedKFoldRun(KFoldRun):
             An ExperimentPerformance instance.
         """
         cdef ExperimentPerformance result
-        cdef StratifiedKFoldCrossValidation crossValidation
+        cdef StratifiedKFoldCrossValidation cross_validation
         result = ExperimentPerformance()
-        crossValidation = StratifiedKFoldCrossValidation(experiment.getDataSet().getClassInstances(), self.K,
-                                                         experiment.getParameter().getSeed())
-        self.runExperiment(experiment.getClassifier(), experiment.getParameter(), result, crossValidation)
+        cross_validation = StratifiedKFoldCrossValidation(instance_lists=experiment.getDataSet().getClassInstances(),
+                                                         K=self.K,
+                                                         seed=experiment.getParameter().getSeed())
+        self.runExperiment(classifier=experiment.getClassifier(),
+                           parameter=experiment.getParameter(),
+                           experimentPerformance=result,
+                           crossValidation=cross_validation)
         return result

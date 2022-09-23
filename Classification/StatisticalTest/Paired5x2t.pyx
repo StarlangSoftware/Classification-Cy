@@ -31,9 +31,11 @@ cdef class Paired5x2t(PairedTest):
             raise StatisticalTestNotApplicable("Variance is 0.")
         return difference[0] / denominator
 
-    cpdef StatisticalTestResult compare(self, ExperimentPerformance classifier1, ExperimentPerformance classifier2):
+    cpdef StatisticalTestResult compare(self,
+                                        ExperimentPerformance classifier1,
+                                        ExperimentPerformance classifier2):
         cdef double statistic
-        cdef int degreeOfFreedom
+        cdef int degree_of_freedom
         statistic = self.__testStatistic(classifier1, classifier2)
-        degreeOfFreedom = classifier1.numberOfExperiments() // 2
-        return StatisticalTestResult(Distribution.tDistribution(statistic, degreeOfFreedom), False)
+        degree_of_freedom = classifier1.numberOfExperiments() // 2
+        return StatisticalTestResult(Distribution.tDistribution(statistic, degree_of_freedom), False)

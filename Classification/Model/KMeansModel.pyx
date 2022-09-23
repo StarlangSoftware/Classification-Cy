@@ -3,7 +3,9 @@ from Math.DiscreteDistribution cimport DiscreteDistribution
 
 cdef class KMeansModel(GaussianModel):
 
-    def __init__(self, priorDistribution: DiscreteDistribution, classMeans: InstanceList,
+    def __init__(self,
+                 priorDistribution: DiscreteDistribution,
+                 classMeans: InstanceList,
                  distanceMetric: DistanceMetric):
         """
         The constructor that sets the classMeans, priorDistribution and distanceMetric according to given inputs.
@@ -17,9 +19,9 @@ cdef class KMeansModel(GaussianModel):
         distanceMetric : DistanceMetric
             DistanceMetric input.
         """
-        self.__classMeans = classMeans
-        self.priorDistribution = priorDistribution
-        self.__distanceMetric = distanceMetric
+        self.__class_means = classMeans
+        self.prior_distribution = priorDistribution
+        self.__distance_metric = distanceMetric
 
     cpdef double calculateMetric(self, Instance instance, str Ci):
         """
@@ -40,7 +42,7 @@ cdef class KMeansModel(GaussianModel):
             The negated distance between given instance and the current item of class means.
         """
         cdef int i
-        for i in range(self.__classMeans.size()):
-            if self.__classMeans.get(i).getClassLabel() == Ci:
-                return -self.__distanceMetric.distance(instance, self.__classMeans.get(i))
+        for i in range(self.__class_means.size()):
+            if self.__class_means.get(i).getClassLabel() == Ci:
+                return -self.__distance_metric.distance(instance, self.__class_means.get(i))
         return -1000000

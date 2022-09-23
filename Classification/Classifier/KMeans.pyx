@@ -8,14 +8,18 @@ from Classification.Parameter.Parameter cimport Parameter
 
 cdef class KMeans(Classifier):
 
-    cpdef train(self, InstanceList trainSet, Parameter parameters):
-        cdef DiscreteDistribution priorDistribution
-        cdef InstanceList classMeans
-        cdef Partition classLists
+    cpdef train(self,
+                InstanceList trainSet,
+                Parameter parameters):
+        cdef DiscreteDistribution prior_distribution
+        cdef InstanceList class_means
+        cdef Partition class_lists
         cdef int i
-        priorDistribution = trainSet.classDistribution()
-        classMeans = InstanceList()
-        classLists = Partition(trainSet)
-        for i in range(classLists.size()):
-            classMeans.add(classLists.get(i).average())
-        self.model = KMeansModel(priorDistribution, classMeans, parameters.getDistanceMetric())
+        prior_distribution = trainSet.classDistribution()
+        class_means = InstanceList()
+        class_lists = Partition(trainSet)
+        for i in range(class_lists.size()):
+            class_means.add(class_lists.get(i).average())
+        self.model = KMeansModel(priorDistribution=prior_distribution,
+                                 classMeans=class_means,
+                                 distanceMetric=parameters.getDistanceMetric())

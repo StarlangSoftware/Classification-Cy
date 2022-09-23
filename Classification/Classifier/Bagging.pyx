@@ -9,7 +9,9 @@ from Sampling.Bootstrap cimport Bootstrap
 
 cdef class Bagging(Classifier):
 
-    cpdef train(self, InstanceList trainSet, Parameter parameters):
+    cpdef train(self,
+                InstanceList trainSet,
+                Parameter parameters):
         """
         Bagging bootstrap ensemble method that creates individuals for its ensemble by training each classifier on a
         random redistribution of the training set.
@@ -24,13 +26,13 @@ cdef class Bagging(Classifier):
         parameters : Parameter
             Parameters of the bagging trees algorithm. ensembleSize returns the number of trees in the bagged forest.
         """
-        cdef int forestSize, i
+        cdef int forest_size, i
         cdef list forest
         cdef Bootstrap bootstrap
         cdef DecisionTree tree
-        forestSize = parameters.getEnsembleSize()
+        forest_size = parameters.getEnsembleSize()
         forest = []
-        for i in range(forestSize):
+        for i in range(forest_size):
             bootstrap = trainSet.bootstrap(i)
             tree = DecisionTree(DecisionNode(InstanceList(bootstrap.getSample())))
             forest.append(tree)

@@ -3,9 +3,9 @@ from Classification.Parameter.Parameter cimport Parameter
 
 cdef class LinearPerceptronParameter(Parameter):
 
-    cdef double learningRate
-    cdef double etaDecrease
-    cdef double crossValidationRatio
+    cdef double learning_rate
+    cdef double eta_decrease
+    cdef double cross_validation_ratio
     cdef int __epoch
 
     cpdef double getLearningRate(self)

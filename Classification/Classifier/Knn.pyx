@@ -6,7 +6,9 @@ from Classification.Parameter.Parameter cimport Parameter
 
 cdef class Knn(Classifier):
 
-    cpdef train(self, InstanceList trainSet, Parameter parameters):
+    cpdef train(self,
+                InstanceList trainSet,
+                Parameter parameters):
         """
         Training algorithm for K-nearest neighbor classifier.
 
@@ -17,4 +19,6 @@ cdef class Knn(Classifier):
         parameters : KnnParameter
             Parameters of the Knn algorithm.
         """
-        self.model = KnnModel(trainSet, parameters.getK(), parameters.getDistanceMetric())
+        self.model = KnnModel(data=trainSet,
+                              k=parameters.getK(),
+                              distanceMetric=parameters.getDistanceMetric())

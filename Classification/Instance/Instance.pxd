@@ -5,7 +5,7 @@ from Classification.FeatureSelection.FeatureSubSet cimport FeatureSubSet
 
 cdef class Instance(object):
 
-    cdef str __classLabel
+    cdef str __class_label
     cdef list __attributes
 
     cpdef addDiscreteAttribute(self, str value)

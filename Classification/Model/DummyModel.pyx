@@ -30,10 +30,10 @@ cdef class DummyModel(Model):
         str
             The entry of distribution which has the maximum value.
         """
-        cdef list possibleClassLabels
+        cdef list possible_class_labels
         if isinstance(instance, CompositeInstance):
-            possibleClassLabels = instance.getPossibleClassLabels()
-            return self.distribution.getMaxItemIncludeTheseOnly(possibleClassLabels)
+            possible_class_labels = instance.getPossibleClassLabels()
+            return self.distribution.getMaxItemIncludeTheseOnly(possible_class_labels)
         else:
             return self.distribution.getMaxItem()
 

@@ -34,9 +34,9 @@ cdef class DiscreteToContinuous(LaryFilter):
         cdef int size, i, index, j
         size = instance.attributeSize()
         for i in range(size):
-            if len(self.attributeDistributions[i]) > 0:
-                index = self.attributeDistributions[i].getIndex(instance.getAttribute(i).__str__())
-                for j in range(len(self.attributeDistributions[i])):
+            if len(self.attribute_distributions[i]) > 0:
+                index = self.attribute_distributions[i].getIndex(instance.getAttribute(i).__str__())
+                for j in range(len(self.attribute_distributions[i])):
                     if j != index:
                         instance.addAttribute(ContinuousAttribute(0))
                     else:
@@ -48,12 +48,12 @@ cdef class DiscreteToContinuous(LaryFilter):
         Converts the data definition with discrete attributes, to data definition with continuous attributes. Basically,
         for each discrete attribute with L possible values, L more continuous attributes will be added.
         """
-        cdef DataDefinition dataDefinition
+        cdef DataDefinition data_definition
         cdef int size, i, j
-        dataDefinition = self.dataSet.getDataDefinition()
-        size = dataDefinition.attributeCount()
+        data_definition = self.dataSet.getDataDefinition()
+        size = data_definition.attributeCount()
         for i in range(size):
-            if len(self.attributeDistributions[i]) > 0:
-                for j in range(len(self.attributeDistributions[i])):
-                    dataDefinition.addAttribute(AttributeType.CONTINUOUS)
+            if len(self.attribute_distributions[i]) > 0:
+                for j in range(len(self.attribute_distributions[i])):
+                    data_definition.addAttribute(AttributeType.CONTINUOUS)
         self.removeDiscreteAttributesFromDataDefinition(size)

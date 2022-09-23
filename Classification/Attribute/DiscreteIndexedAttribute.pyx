@@ -1,6 +1,9 @@
 cdef class DiscreteIndexedAttribute(DiscreteAttribute):
 
-    def __init__(self, value: str, index: int, maxIndex: int):
+    def __init__(self,
+                 value: str,
+                 index: int,
+                 maxIndex: int):
         """
         Constructor for a discrete attribute.
 

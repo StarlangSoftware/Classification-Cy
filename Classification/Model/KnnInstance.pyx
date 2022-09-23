@@ -1,6 +1,8 @@
 cdef class KnnInstance(object):
 
-    def __init__(self, instance: Instance, distance: float):
+    def __init__(self,
+                 instance: Instance,
+                 distance: float):
         """
         The constructor that sets the instance and distance value.
 
