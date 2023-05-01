@@ -21,3 +21,6 @@ cdef class Dummy(Classifier):
             Parameter of the Dummy algorithm.
         """
         self.model = DummyModel(trainSet)
+
+    cpdef loadModel(self, str fileName):
+        self.model = DummyModel(fileName)

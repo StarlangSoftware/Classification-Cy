@@ -13,3 +13,6 @@ cdef class KnnModel(Model):
     cpdef str predict(self, Instance instance)
     cpdef dict predictProbability(self, Instance instance)
     cpdef InstanceList nearestNeighbors(self, Instance instance)
+    cpdef InstanceList loadInstanceList(self, object inputFile)
+    cpdef constructor1(self, InstanceList data, int k, DistanceMetric distanceMetric)
+    cpdef constructor2(self, str fileName)

@@ -11,6 +11,9 @@ cdef class Classifier(object):
                 Parameter parameters):
         pass
 
+    cpdef loadModel(self, str fileName):
+        pass
+
     cpdef bint discreteCheck(self, Instance instance):
         """
         Checks given instance's attribute and returns true if it is a discrete indexed attribute, false otherwise.

@@ -3,7 +3,7 @@ from Classification.Attribute.AttributeType import AttributeType
 
 cdef class DataDefinition(object):
 
-    def __init__(self, attributeTypes=None):
+    def __init__(self, attributeTypes=None, attributeValueList=None):
         """
         Constructor for creating a new DataDefinition with given attribute types.
 
@@ -14,7 +14,21 @@ cdef class DataDefinition(object):
         """
         if attributeTypes is None:
             attributeTypes = []
+        if attributeValueList is not None:
+            self.__attributeValueList = attributeValueList
         self.__attributeTypes = attributeTypes
+
+    cpdef int numberOfValues(self, int attributeIndex):
+        return len(self.__attributeValueList[attributeIndex])
+
+    cpdef int featureValueIndex(self,
+                          int attributeIndex,
+                          str value: str):
+        cdef int i
+        for i in range(len(self.__attributeValueList[attributeIndex])):
+            if self.__attributeValueList[attributeIndex][i] == value:
+                return i
+        return -1
 
     cpdef int attributeCount(self):
         """

@@ -37,3 +37,6 @@ cdef class Bagging(Classifier):
             tree = DecisionTree(DecisionNode(InstanceList(bootstrap.getSample())))
             forest.append(tree)
         self.model = TreeEnsembleModel(forest)
+
+    cpdef loadModel(self, str fileName):
+        self.model = TreeEnsembleModel(fileName)

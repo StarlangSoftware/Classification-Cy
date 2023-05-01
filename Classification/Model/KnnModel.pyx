@@ -1,4 +1,6 @@
 from functools import cmp_to_key
+
+from Classification.DistanceMetric.EuclidianDistance cimport EuclidianDistance
 from Classification.Model.KnnInstance cimport KnnInstance
 from Classification.Instance.CompositeInstance cimport CompositeInstance
 
@@ -6,7 +8,10 @@ from Classification.Instance.CompositeInstance cimport CompositeInstance
 cdef class KnnModel(Model):
 
 
-    def __init__(self, data: InstanceList, k: int, distanceMetric: DistanceMetric):
+    cpdef constructor1(self,
+                     InstanceList data,
+                     int k,
+                     DistanceMetric distanceMetric):
         """
         Constructor that sets the data InstanceList, k value and the DistanceMetric.
 
@@ -22,6 +27,34 @@ cdef class KnnModel(Model):
         self.__data = data
         self.__k = k
         self.__distance_metric = distanceMetric
+
+    cpdef constructor2(self, str fileName):
+        cdef object inputFile
+        self.__distance_metric = EuclidianDistance()
+        inputFile = open(fileName, 'r')
+        self.__k = int(inputFile.readline().strip())
+        self.__data = self.loadInstanceList(inputFile)
+        inputFile.close()
+
+    cpdef InstanceList loadInstanceList(self, object inputFile):
+        cdef list types
+        cdef int instance_count, i
+        cdef InstanceList instance_list
+        types = inputFile.readline().strip().split(" ")
+        instance_count = int(inputFile.readline().strip())
+        instance_list = InstanceList()
+        for i in range(instance_count):
+            instance_list.add(self.loadInstance(inputFile.readline().strip(), types))
+        return instance_list
+
+    def __init__(self,
+                 data: object,
+                 k: int = None,
+                 distanceMetric: DistanceMetric = None):
+        if isinstance(data, InstanceList):
+            self.constructor1(data, k, distanceMetric)
+        elif isinstance(data, str):
+            self.constructor2(data)
 
     cpdef str predict(self, Instance instance):
         """

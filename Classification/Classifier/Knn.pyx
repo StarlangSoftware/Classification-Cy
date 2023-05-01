@@ -22,3 +22,6 @@ cdef class Knn(Classifier):
         self.model = KnnModel(data=trainSet,
                               k=parameters.getK(),
                               distanceMetric=parameters.getDistanceMetric())
+
+    cpdef loadModel(self, str fileName):
+        self.model = KnnModel(fileName)

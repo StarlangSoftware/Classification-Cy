@@ -19,3 +19,6 @@ cdef class RandomClassifier(Classifier):
         """
         self.model = RandomModel(classLabels=list(trainSet.classDistribution().keys()),
                                  seed=parameters.getSeed())
+
+    cpdef loadModel(self, str fileName):
+        self.model = RandomModel(fileName)

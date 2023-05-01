@@ -1,4 +1,6 @@
 import random
+from io import TextIOWrapper
+
 from Classification.InstanceList.Partition cimport Partition
 from Classification.Model.Model cimport Model
 from Math.DiscreteDistribution cimport DiscreteDistribution
@@ -12,10 +14,20 @@ cdef class DecisionNode(object):
     EPSILON = 0.0000000001
 
     def __init__(self,
-                 data: InstanceList,
+                 data: object,
                  condition=None,
                  parameter=None,
                  isStump=False):
+        if isinstance(data, InstanceList):
+            self.constructor1(data, condition, parameter, isStump)
+        elif isinstance(data, TextIOWrapper):
+            self.constructor2(data)
+
+    cpdef constructor1(self,
+                 InstanceList data,
+                 object condition,
+                 object parameter,
+                 bint isStump):
         """
         The DecisionNode method takes InstanceList data as input and then it sets the class label parameter by finding
         the most occurred class label of given data, it then gets distinct class labels as class labels ArrayList.
@@ -128,6 +140,31 @@ cdef class DecisionNode(object):
                                                    splitValue=best_split_value,
                                                    parameter=parameter,
                                                    isStump=isStump)
+
+    cpdef constructor2(self, object inputFile):
+        cdef str line
+        cdef list items
+        cdef int i, number_of_children
+        line = inputFile.readline().strip()
+        items = line.split(" ")
+        if items[0] != "-1":
+            if items[1][0] == '=':
+                self.__condition = DecisionCondition(int(items[0]), DiscreteAttribute(items[2]), items[1][0])
+            elif items[1][0] == ':':
+                self.__condition = DecisionCondition(int(items[0]), DiscreteIndexedAttribute("", int(items[2]), int(items[3])), '=')
+            else:
+                self.__condition = DecisionCondition(int(items[0]), ContinuousAttribute(float(items[2])), items[1][0])
+        else:
+            self.__condition = None
+        number_of_children = int(inputFile.readline().strip())
+        if number_of_children != 0:
+            self.leaf = False
+            self.children = []
+            for i in range(number_of_children):
+                self.children.append(DecisionNode(inputFile))
+        else:
+            self.leaf = True
+            self.__class_label = inputFile.readline().strip()
 
     cpdef __entropyForDiscreteAttribute(self, int attributeIndex):
         """

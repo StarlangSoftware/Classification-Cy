@@ -54,3 +54,6 @@ cdef class Qda(Classifier):
                                                                                            getProbability(Ci))
             w0[Ci] = w0i
         self.model = QdaModel(prior_distribution, W, w, w0)
+
+    cpdef loadModel(self, str fileName):
+        self.model = QdaModel(fileName)

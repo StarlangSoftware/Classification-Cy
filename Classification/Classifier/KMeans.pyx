@@ -23,3 +23,6 @@ cdef class KMeans(Classifier):
         self.model = KMeansModel(priorDistribution=prior_distribution,
                                  classMeans=class_means,
                                  distanceMetric=parameters.getDistanceMetric())
+
+    cpdef loadModel(self, str fileName):
+        self.model = KMeansModel(fileName)

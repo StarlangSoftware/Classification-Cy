@@ -26,10 +26,10 @@ cdef class MultiLayerPerceptronModel(LinearPerceptronModel):
                                              column=H + 1,
                                              seed=seed)
 
-    def __init__(self,
-                 trainSet: InstanceList,
-                 validationSet: InstanceList,
-                 parameters: MultiLayerPerceptronParameter):
+    cpdef constructor4(self,
+                     InstanceList trainSet,
+                     InstanceList validationSet,
+                     MultiLayerPerceptronParameter parameters):
         """
         A constructor that takes InstanceLists as trainsSet and validationSet. It  sets the NeuralNetworkModel nodes
         with given InstanceList then creates an input vector by using given trainSet and finds error. Via the
@@ -51,7 +51,9 @@ cdef class MultiLayerPerceptronModel(LinearPerceptronModel):
         cdef int epoch, i, j
         cdef double learning_rate
         cdef Vector hidden, hidden_biased, rMinusY, one_minus_hidden, tmp_h, tmp_hidden
-        self.initWithTrainSet(trainSet)
+        self.class_labels = trainSet.getDistinctClassLabels()
+        self.K = len(self.class_labels)
+        self.d = trainSet.get(0).continuousAttributeSize()
         self.__activation_function = parameters.getActivationFunction()
         self.__allocateWeights(parameters.getHiddenNodes(), parameters.getSeed())
         best_w = copy.deepcopy(self.W)
@@ -93,6 +95,25 @@ cdef class MultiLayerPerceptronModel(LinearPerceptronModel):
             learning_rate *= parameters.getEtaDecrease()
         self.W = best_w
         self.__V = best_v
+
+    cpdef constructor3(self, str fileName):
+        cdef object inputFile
+        inputFile = open(fileName, mode='r', encoding='utf-8')
+        self.loadClassLabels(inputFile)
+        self.W = self.loadMatrix(inputFile)
+        self.__V = self.loadMatrix(inputFile)
+        self.__activation_function = self.loadActivationFunction(inputFile)
+        inputFile.close()
+
+    def __init__(self,
+                 trainSet: object,
+                 validationSet: InstanceList = None,
+                 parameters: MultiLayerPerceptronParameter = None):
+        if isinstance(trainSet, InstanceList):
+            self.constructor4(trainSet, validationSet, parameters)
+        elif isinstance(trainSet, str):
+            super().__init__()
+            self.constructor3(trainSet)
 
     cpdef calculateOutput(self):
         """

@@ -34,3 +34,6 @@ cdef class C45(Classifier):
         else:
             tree = DecisionTree(DecisionNode(trainSet))
         self.model = tree
+
+    cpdef loadModel(self, str fileName):
+        self.model = DecisionTree(fileName)

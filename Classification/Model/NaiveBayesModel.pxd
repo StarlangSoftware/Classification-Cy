@@ -1,3 +1,5 @@
+from Math.DiscreteDistribution cimport DiscreteDistribution
+
 from Classification.Instance.Instance cimport Instance
 from Classification.Model.GaussianModel cimport GaussianModel
 
@@ -13,3 +15,5 @@ cdef class NaiveBayesModel(GaussianModel):
     cpdef double calculateMetric(self, Instance instance, str Ci)
     cpdef double __logLikelihoodContinuous(self, str classLabel, Instance instance)
     cpdef double __logLikelihoodDiscrete(self, str classLabel, Instance instance)
+    cpdef constructor1(self, DiscreteDistribution priorDistribution)
+    cpdef constructor2(self, str fileName)

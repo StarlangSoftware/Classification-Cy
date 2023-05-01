@@ -13,6 +13,13 @@ class QdaTest(ClassifierTest):
         qda.train(self.bupa.getInstanceList(), None)
         self.assertAlmostEqual(36.52, 100 * qda.test(self.bupa.getInstanceList()).getErrorRate(), 2)
 
+    def test_Load(self):
+        qda = Qda()
+        qda.loadModel("../../models/qda-iris.txt")
+        self.assertAlmostEqual(2.00, 100 * qda.test(self.iris.getInstanceList()).getErrorRate(), 2)
+        qda.loadModel("../../models/qda-bupa.txt")
+        self.assertAlmostEqual(36.52, 100 * qda.test(self.bupa.getInstanceList()).getErrorRate(), 2)
+
 
 if __name__ == '__main__':
     unittest.main()

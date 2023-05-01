@@ -20,3 +20,5 @@ cdef class DecisionNode(object):
                                       bint isStump)
     cpdef str predict(self, Instance instance)
     cpdef dict predictProbabilityDistribution(self, Instance instance)
+    cpdef constructor1(self, InstanceList data, object condition, object parameter, bint isStump)
+    cpdef constructor2(self, object inputFile)

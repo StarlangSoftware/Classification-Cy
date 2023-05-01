@@ -4,7 +4,7 @@ from Math.DiscreteDistribution cimport DiscreteDistribution
 
 cdef class NaiveBayesModel(GaussianModel):
 
-    def __init__(self, priorDistribution: DiscreteDistribution):
+    cpdef constructor1(self, DiscreteDistribution priorDistribution):
         """
         A constructor that sets the priorDistribution.
 
@@ -14,6 +14,22 @@ cdef class NaiveBayesModel(GaussianModel):
             DiscreteDistribution input.
         """
         self.prior_distribution = priorDistribution
+
+    cpdef constructor2(self, str fileName):
+        cdef object inputFile
+        cdef int size
+        inputFile = open(fileName, mode='r', encoding='utf-8')
+        size = self.loadPriorDistribution(inputFile)
+        self.__class_means = self.loadVectors(inputFile, size)
+        self.__class_deviations = self.loadVectors(inputFile, size)
+        self.__class_attribute_distributions = None
+        inputFile.close()
+
+    def __init__(self, priorDistribution: object):
+        if isinstance(priorDistribution, DiscreteDistribution):
+            self.constructor1(priorDistribution)
+        elif isinstance(priorDistribution, str):
+            self.constructor2(priorDistribution)
 
     cpdef initForContinuous(self,
                             dict classMeans,

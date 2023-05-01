@@ -83,3 +83,6 @@ cdef class NaiveBayes(Classifier):
             self.trainDiscreteVersion(prior_distribution, class_lists)
         else:
             self.trainContinuousVersion(prior_distribution, class_lists)
+
+    cpdef loadModel(self, str fileName):
+        self.model = NaiveBayesModel(fileName)

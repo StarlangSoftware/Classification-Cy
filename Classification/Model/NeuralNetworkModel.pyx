@@ -9,7 +9,7 @@ cdef class NeuralNetworkModel(ValidatedModel):
     cpdef calculateOutput(self):
         pass
 
-    def __init__(self, trainSet: InstanceList):
+    def __init__(self, trainSet: InstanceList = None):
         """
         Constructor that sets the class labels, their sizes as K and the size of the continuous attributes as d.
 
@@ -18,9 +18,10 @@ cdef class NeuralNetworkModel(ValidatedModel):
         trainSet : InstanceList
             InstanceList to use as train set.
         """
-        self.class_labels = trainSet.getDistinctClassLabels()
-        self.K = len(self.class_labels)
-        self.d = trainSet.get(0).continuousAttributeSize()
+        if trainSet is not None:
+            self.class_labels = trainSet.getDistinctClassLabels()
+            self.K = len(self.class_labels)
+            self.d = trainSet.get(0).continuousAttributeSize()
 
     cpdef Matrix allocateLayerWeights(self, int row, int column, int seed):
         """
@@ -238,3 +239,23 @@ cdef class NeuralNetworkModel(ValidatedModel):
         for i in range(len(self.class_labels)):
             result[self.class_labels[i]] = self.y.getValue(i)
         return result
+
+    cpdef loadClassLabels(self, object inputFile):
+        cdef list items
+        cdef int i
+        items = inputFile.readline().strip().split(" ")
+        self.K = int(items[0])
+        self.d = int(items[1])
+        self.class_labels = list()
+        for i in range(self.K):
+            self.class_labels.append(inputFile.readline().strip())
+
+    cpdef loadActivationFunction(self, object inputFile):
+        cdef str line
+        line = inputFile.readline().strip()
+        if line == "TANH":
+            return ActivationFunction.TANH
+        elif line == "RELU":
+            return ActivationFunction.RELU
+        else:
+            return ActivationFunction.SIGMOID

@@ -1,3 +1,5 @@
+from Math.Vector cimport Vector
+
 from Classification.Instance.CompositeInstance cimport CompositeInstance
 
 
@@ -7,6 +9,35 @@ cdef class GaussianModel(ValidatedModel):
                                  Instance instance,
                                  str Ci):
         pass
+
+    cpdef loadPriorDistribution(self, object inputFile):
+        cdef int size, i, j
+        cdef str line
+        cdef list items
+        size = int(inputFile.readline().strip())
+        self.prior_distribution = DiscreteDistribution()
+        for i in range(size):
+            line = inputFile.readline().strip()
+            items = line.split(" ")
+            for j in range(int(items[1])):
+                self.prior_distribution.addItem(items[0])
+        return size
+
+    cpdef dict loadVectors(self, object inputFile, int size):
+        cdef dict hash_map
+        cdef int i, j
+        cdef str line
+        cdef Vector vector
+        cdef list items
+        hash_map = dict()
+        for i in range(size):
+            line = inputFile.readline().strip()
+            items = line.split(" ")
+            vector = Vector(int(items[1]), 0)
+            for j in range(2, len(items)):
+                vector.setValue(j - 2, float(items[j]))
+            hash_map[items[0]] = vector
+        return hash_map
 
     cpdef str predict(self, Instance instance):
         """

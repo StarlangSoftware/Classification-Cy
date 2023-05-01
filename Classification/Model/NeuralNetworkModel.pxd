@@ -21,3 +21,5 @@ cdef class NeuralNetworkModel(ValidatedModel):
     cpdef str predictWithCompositeInstance(self, list possibleClassLabels)
     cpdef str predict(self, Instance instance)
     cpdef dict predictProbability(self, Instance instance)
+    cpdef loadClassLabels(self, object inputFile)
+    cpdef loadActivationFunction(self, object inputFile)

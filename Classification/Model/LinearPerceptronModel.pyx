@@ -6,13 +6,13 @@ from Classification.Performance.ClassificationPerformance cimport Classification
 
 cdef class LinearPerceptronModel(NeuralNetworkModel):
 
-    cpdef initWithTrainSet(self, InstanceList trainSet):
+    cpdef constructor1(self, InstanceList trainSet):
         super().__init__(trainSet)
 
-    def __init__(self,
-                 trainSet: InstanceList,
-                 validationSet: InstanceList,
-                 parameters: LinearPerceptronParameter):
+    cpdef constructor2(self,
+                     InstanceList trainSet,
+                     InstanceList validationSet,
+                     LinearPerceptronParameter parameters):
         """
         Constructor that takes InstanceLists as trainsSet and validationSet. Initially it allocates layer weights,
         then creates an input vector by using given trainSet and finds error. Via the validationSet it finds the
@@ -33,7 +33,9 @@ cdef class LinearPerceptronModel(NeuralNetworkModel):
         cdef int epoch, i, j
         cdef double learning_rate
         cdef Vector r_minus_y
-        super().__init__(trainSet)
+        self.class_labels = trainSet.getDistinctClassLabels()
+        self.K = len(self.class_labels)
+        self.d = trainSet.get(0).continuousAttributeSize()
         self.W = self.allocateLayerWeights(row=self.K,
                                            column=self.d + 1,
                                            seed=parameters.getSeed())
@@ -55,6 +57,25 @@ cdef class LinearPerceptronModel(NeuralNetworkModel):
                 best_w = copy.deepcopy(self.W)
             learning_rate *= parameters.getEtaDecrease()
         self.W = best_w
+
+    cpdef constructor3(self, str fileName):
+        cdef object inputFile
+        inputFile = open(fileName, mode='r', encoding='utf-8')
+        self.loadClassLabels(inputFile)
+        self.W = self.loadMatrix(inputFile)
+        inputFile.close()
+
+    def __init__(self, trainSet: object = None, validationSet: InstanceList = None,
+                 parameters: LinearPerceptronParameter = None):
+        if trainSet is not None:
+            if isinstance(trainSet, InstanceList):
+                if validationSet is None:
+                    self.constructor1(trainSet)
+                else:
+                    self.constructor2(trainSet, validationSet, parameters)
+            elif isinstance(trainSet, str):
+                super().__init__()
+                self.constructor3(trainSet)
 
     cpdef calculateOutput(self):
         """

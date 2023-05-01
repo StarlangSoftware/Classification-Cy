@@ -4,7 +4,7 @@ from Classification.InstanceList.InstanceList cimport InstanceList
 
 cdef class DummyModel(Model):
 
-    def __init__(self, trainSet: InstanceList):
+    cpdef constructor1(self, InstanceList trainSet):
         """
         Constructor which sets the distribution using the given InstanceList.
 
@@ -14,6 +14,28 @@ cdef class DummyModel(Model):
             InstanceList which is used to get the class distribution.
         """
         self.distribution = trainSet.classDistribution()
+
+    cpdef constructor2(self, str fileName):
+        cdef object inputFile
+        cdef int size, i, count, j
+        cdef str line
+        cdef list items
+        inputFile = open(fileName, mode='r', encoding='utf-8')
+        self.distribution = DiscreteDistribution()
+        size = int(inputFile.readline().strip())
+        for i in range(size):
+            line = inputFile.readline().strip()
+            items = line.split(" ")
+            count = int(items[1])
+            for j in range(count):
+                self.distribution.addItem(items[0])
+        inputFile.close()
+
+    def __init__(self, trainSet: object):
+        if isinstance(trainSet, InstanceList):
+            self.constructor1(trainSet)
+        elif isinstance(trainSet, str):
+            self.constructor2(trainSet)
 
     cpdef str predict(self, Instance instance):
         """

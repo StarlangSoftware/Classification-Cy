@@ -14,3 +14,4 @@ cdef class Classifier(object):
     cpdef Performance test(self, InstanceList testSet)
     cpdef Performance singleRun(self, Parameter parameter, InstanceList trainSet, InstanceList testSet)
     cpdef Model getModel(self)
+    cpdef loadModel(self, str fileName)

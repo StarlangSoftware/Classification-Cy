@@ -9,3 +9,5 @@ cdef class GaussianModel(ValidatedModel):
 
     cpdef double calculateMetric(self, Instance instance, str Ci)
     cpdef str predict(self, Instance instance)
+    cpdef loadPriorDistribution(self, object inputFile)
+    cpdef dict loadVectors(self, object inputFile, int size)

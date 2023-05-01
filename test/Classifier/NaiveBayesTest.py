@@ -21,6 +21,15 @@ class NaiveBayesTest(ClassifierTest):
         naiveBayes.train(self.nursery.getInstanceList(), None)
         self.assertAlmostEqual(9.70, 100 * naiveBayes.test(self.nursery.getInstanceList()).getErrorRate(), 2)
 
+    def test_Load(self):
+        naiveBayes = NaiveBayes()
+        naiveBayes.loadModel("../../models/naiveBayes-iris.txt")
+        self.assertAlmostEqual(5.33, 100 * naiveBayes.test(self.iris.getInstanceList()).getErrorRate(), 2)
+        naiveBayes.loadModel("../../models/naiveBayes-bupa.txt")
+        self.assertAlmostEqual(38.55, 100 * naiveBayes.test(self.bupa.getInstanceList()).getErrorRate(), 2)
+        naiveBayes.loadModel("../../models/naiveBayes-dermatology.txt")
+        self.assertAlmostEqual(9.56, 100 * naiveBayes.test(self.dermatology.getInstanceList()).getErrorRate(), 2)
+
 
 if __name__ == '__main__':
     unittest.main()

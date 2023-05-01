@@ -12,3 +12,5 @@ cdef class DecisionTree(ValidatedModel):
     cpdef prune(self, InstanceList pruneSet)
     cpdef dict predictProbability(self, Instance instance)
     cpdef str predict(self, Instance instance)
+    cpdef constructor1(self, DecisionNode root)
+    cpdef constructor2(self, str fileName)

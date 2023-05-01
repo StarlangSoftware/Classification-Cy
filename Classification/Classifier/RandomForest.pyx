@@ -36,3 +36,6 @@ cdef class RandomForest(Classifier):
                                              isStump=False))
             forest.append(tree)
         self.model = TreeEnsembleModel(forest)
+
+    cpdef loadModel(self, str fileName):
+        self.model = TreeEnsembleModel(fileName)

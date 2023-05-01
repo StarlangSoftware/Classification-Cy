@@ -4,7 +4,7 @@ from Classification.Performance.ClassificationPerformance cimport Classification
 
 cdef class DecisionTree(ValidatedModel):
 
-    def __init__(self, root: DecisionNode):
+    cpdef constructor1(self, DecisionNode root):
         """
         Constructor that sets root node of the decision tree.
 
@@ -14,6 +14,18 @@ cdef class DecisionTree(ValidatedModel):
             DecisionNode type input.
         """
         self.__root = root
+
+    cpdef constructor2(self, str fileName):
+        cdef object inputFile
+        inputFile = open(fileName, mode='r', encoding='utf-8')
+        self.__root = DecisionNode(inputFile)
+        inputFile.close()
+
+    def __init__(self, root: object):
+        if isinstance(root, DecisionNode):
+            self.constructor1(root)
+        elif isinstance(root, str):
+            self.constructor2(root)
 
     cpdef str predict(self, Instance instance):
         """

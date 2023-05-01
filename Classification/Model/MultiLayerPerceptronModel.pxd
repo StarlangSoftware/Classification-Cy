@@ -1,6 +1,8 @@
 from Math.Matrix cimport Matrix
-from Classification.Model.LinearPerceptronModel cimport LinearPerceptronModel
 
+from Classification.InstanceList.InstanceList cimport InstanceList
+from Classification.Model.LinearPerceptronModel cimport LinearPerceptronModel
+from Classification.Parameter.MultiLayerPerceptronParameter cimport MultiLayerPerceptronParameter
 
 cdef class MultiLayerPerceptronModel(LinearPerceptronModel):
 
@@ -9,3 +11,8 @@ cdef class MultiLayerPerceptronModel(LinearPerceptronModel):
 
     cpdef __allocateWeights(self, int H, int seed)
     cpdef calculateOutput(self)
+    cpdef constructor3(self, str fileName)
+    cpdef constructor4(self,
+                     InstanceList trainSet,
+                     InstanceList validationSet,
+                     MultiLayerPerceptronParameter parameters)

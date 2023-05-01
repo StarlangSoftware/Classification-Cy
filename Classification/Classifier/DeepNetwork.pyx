@@ -28,3 +28,6 @@ cdef class DeepNetwork(Classifier):
         self.model = DeepNetworkModel(trainSet=partition.get(1),
                                       validationSet=partition.get(0),
                                       parameters=parameters)
+
+    cpdef loadModel(self, str fileName):
+        self.model = DeepNetworkModel(fileName)

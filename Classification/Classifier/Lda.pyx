@@ -55,3 +55,6 @@ cdef class Lda(Classifier):
             w0i = -0.5 * wi.dotProduct(average_vector) + math.log(prior_distribution.getProbability(Ci))
             w0[Ci] = w0i
         self.model = LdaModel(prior_distribution, w, w0)
+
+    cpdef loadModel(self, str fileName):
+        self.model = LdaModel(fileName)

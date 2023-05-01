@@ -22,3 +22,6 @@ cdef class C45Stump(Classifier):
         """
         self.model = DecisionTree(DecisionNode(data=trainSet,
                                                isStump=True))
+
+    cpdef loadModel(self, str fileName):
+        self.model = DecisionTree(fileName)

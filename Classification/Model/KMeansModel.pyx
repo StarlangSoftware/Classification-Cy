@@ -1,12 +1,13 @@
 from Math.DiscreteDistribution cimport DiscreteDistribution
 
+from Classification.DistanceMetric.EuclidianDistance cimport EuclidianDistance
 
 cdef class KMeansModel(GaussianModel):
 
-    def __init__(self,
-                 priorDistribution: DiscreteDistribution,
-                 classMeans: InstanceList,
-                 distanceMetric: DistanceMetric):
+    cpdef constructor1(self,
+                     DiscreteDistribution priorDistribution,
+                     InstanceList classMeans,
+                     DistanceMetric distanceMetric):
         """
         The constructor that sets the classMeans, priorDistribution and distanceMetric according to given inputs.
 
@@ -22,6 +23,34 @@ cdef class KMeansModel(GaussianModel):
         self.__class_means = classMeans
         self.prior_distribution = priorDistribution
         self.__distance_metric = distanceMetric
+
+    cpdef constructor2(self, str fileName):
+        cdef object inputFile
+        self.__distance_metric = EuclidianDistance()
+        inputFile = open(fileName, 'r')
+        self.loadPriorDistribution(inputFile)
+        self.__class_means = self.loadInstanceList(inputFile)
+        inputFile.close()
+
+    cpdef InstanceList loadInstanceList(self, object inputFile):
+        cdef list types
+        cdef int instance_count, i
+        cdef InstanceList instance_list
+        types = inputFile.readline().strip().split(" ")
+        instance_count = int(inputFile.readline().strip())
+        instance_list = InstanceList()
+        for i in range(instance_count):
+            instance_list.add(self.loadInstance(inputFile.readline().strip(), types))
+        return instance_list
+
+    def __init__(self,
+                 priorDistribution: object,
+                 classMeans: InstanceList = None,
+                 distanceMetric: DistanceMetric = None):
+        if isinstance(priorDistribution, DiscreteDistribution):
+            self.constructor1(priorDistribution, classMeans, distanceMetric)
+        elif isinstance(priorDistribution, str):
+            self.constructor2(priorDistribution)
 
     cpdef double calculateMetric(self, Instance instance, str Ci):
         """

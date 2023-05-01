@@ -2,14 +2,15 @@ from Math.DiscreteDistribution cimport DiscreteDistribution
 from Math.Vector cimport Vector
 from Math.Matrix cimport Matrix
 
+from Classification.Model.LdaModel cimport LdaModel
 
-cdef class QdaModel(GaussianModel):
+cdef class QdaModel(LdaModel):
 
-    def __init__(self,
-                 priorDistribution: DiscreteDistribution,
-                 W: dict,
-                 w: dict,
-                 w0: dict):
+    cpdef constructor3(self,
+                     DiscreteDistribution priorDistribution,
+                     dict W,
+                     dict w,
+                     dict w0):
         """
         A constructor which sets the priorDistribution, w and w0 and dictionary of String Matrix according to given
         inputs.
@@ -29,6 +30,32 @@ cdef class QdaModel(GaussianModel):
         self.__W = W
         self.w = w
         self.w0 = w0
+
+    cpdef constructor2(self, str fileName):
+        cdef object inputFile
+        cdef int size, i
+        cdef str c
+        cdef Matrix matrix
+        inputFile = open(fileName, mode='r', encoding='utf-8')
+        size = self.loadPriorDistribution(inputFile)
+        self.loadWandW0(inputFile, size)
+        self.__W = dict()
+        for i in range(size):
+            c = inputFile.readline().strip()
+            matrix = self.loadMatrix(inputFile)
+            self.__W[c] = matrix
+        inputFile.close()
+
+    def __init__(self,
+                 priorDistribution: object,
+                 W: dict = None,
+                 w: dict = None,
+                 w0: dict = None):
+        super().__init__()
+        if isinstance(priorDistribution, DiscreteDistribution):
+            self.constructor3(priorDistribution, W, w, w0)
+        elif isinstance(priorDistribution, str):
+            self.constructor2(priorDistribution)
 
     cpdef double calculateMetric(self,
                                  Instance instance,

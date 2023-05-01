@@ -8,10 +8,10 @@ from Classification.Parameter.ActivationFunction import ActivationFunction
 
 cdef class DeepNetworkModel(NeuralNetworkModel):
 
-    def __init__(self,
-                 trainSet: InstanceList,
-                 validationSet: InstanceList,
-                 parameters: DeepNetworkParameter):
+    cpdef constructor1(self,
+                 InstanceList trainSet,
+                 InstanceList validationSet,
+                 DeepNetworkParameter parameters):
         """
         Constructor that takes two InstanceList train set and validation set and DeepNetworkParameter as
         inputs. First it sets the class labels, their sizes as K and the size of the continuous attributes as d of given
@@ -37,7 +37,9 @@ cdef class DeepNetworkModel(NeuralNetworkModel):
         cdef double learning_rate
         cdef Vector r_minus_y, one_minus_hidden, tmp_h, tmp_hidden
         cdef Matrix m
-        super().__init__(trainSet)
+        self.class_labels = trainSet.getDistinctClassLabels()
+        self.K = len(self.class_labels)
+        self.d = trainSet.get(0).continuousAttributeSize()
         delta_weights = []
         hidden = []
         hidden_biased = []
@@ -95,6 +97,28 @@ cdef class DeepNetworkModel(NeuralNetworkModel):
         self.__weights.clear()
         for m in best_weights:
             self.__weights.append(m)
+
+    cpdef constructor2(self, str fileName):
+        cdef object inputFile
+        cdef int i
+        inputFile = open(fileName, mode='r', encoding='utf-8')
+        self.loadClassLabels(inputFile)
+        self.__hidden_layer_size = int(inputFile.readline().strip())
+        self.__weights = list()
+        for i in range(self.__hidden_layer_size + 1):
+            self.__weights.append(self.loadMatrix(inputFile))
+        self.__activation_function = self.loadActivationFunction(inputFile)
+        inputFile.close()
+
+    def __init__(self,
+                 trainSet: object,
+                 validationSet: InstanceList = None,
+                 parameters: DeepNetworkParameter = None):
+        if isinstance(trainSet, InstanceList):
+            self.constructor1(trainSet, validationSet, parameters)
+        elif isinstance(trainSet, str):
+            super().__init__()
+            self.constructor2(trainSet)
 
     cpdef __allocateWeights(self, DeepNetworkParameter parameters):
         """

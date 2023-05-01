@@ -8,3 +8,5 @@ cdef class TreeEnsembleModel(Model):
 
     cpdef str predict(self, Instance instance)
     cpdef dict predictProbability(self, Instance instance)
+    cpdef constructor1(self, list forest)
+    cpdef constructor2(self, str fileName)
