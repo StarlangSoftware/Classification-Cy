@@ -1,4 +1,7 @@
+from io import TextIOWrapper
+
 from DataStructure.CounterHashMap cimport CounterHashMap
+from Math.DiscreteDistribution cimport DiscreteDistribution
 from Math.Matrix cimport Matrix
 
 cdef class Model(object):
@@ -48,6 +51,18 @@ cdef class Model(object):
             for k in range(matrix.getColumn()):
                 matrix.setValue(j, k, float(items[k]))
         return matrix
+
+    @staticmethod
+    def loadClassDistribution(inputFile: TextIOWrapper) -> DiscreteDistribution:
+        distribution = DiscreteDistribution()
+        size = int(inputFile.readline().strip())
+        for i in range(size):
+            line = inputFile.readline().strip()
+            items = line.split(" ")
+            count = int(items[1])
+            for j in range(count):
+                distribution.addItem(items[0])
+        return distribution
 
     @staticmethod
     def getMaximum(classLabels: list) -> str:

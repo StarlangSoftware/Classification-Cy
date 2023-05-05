@@ -1,3 +1,5 @@
+from Math.DiscreteDistribution cimport DiscreteDistribution
+
 from Classification.Instance.Instance cimport Instance
 from Classification.InstanceList.InstanceList cimport InstanceList
 from Classification.Model.DecisionTree.DecisionCondition cimport DecisionCondition
@@ -11,6 +13,7 @@ cdef class DecisionNode(object):
     cdef str __class_label
     cdef bint leaf
     cdef DecisionCondition __condition
+    cdef DiscreteDistribution __classLabelsDistribution
 
     cpdef __entropyForDiscreteAttribute(self, int attributeIndex)
     cpdef __createChildrenForDiscreteIndexed(self, int attributeIndex, int attributeValue,
