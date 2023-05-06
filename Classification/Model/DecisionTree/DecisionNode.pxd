@@ -9,17 +9,16 @@ from Classification.Parameter.RandomForestParameter cimport RandomForestParamete
 cdef class DecisionNode(object):
 
     cdef list children
-    cdef InstanceList __data
     cdef str __class_label
     cdef bint leaf
     cdef DecisionCondition __condition
     cdef DiscreteDistribution __classLabelsDistribution
 
-    cpdef __entropyForDiscreteAttribute(self, int attributeIndex)
-    cpdef __createChildrenForDiscreteIndexed(self, int attributeIndex, int attributeValue,
+    cpdef __entropyForDiscreteAttribute(self, InstanceList data, int attributeIndex)
+    cpdef __createChildrenForDiscreteIndexed(self, InstanceList data, int attributeIndex, int attributeValue,
                                            RandomForestParameter parameter, bint isStump)
-    cpdef __createChildrenForDiscrete(self, int attributeIndex, RandomForestParameter parameter, bint isStump)
-    cpdef __createChildrenForContinuous(self, int attributeIndex, double splitValue, RandomForestParameter parameter,
+    cpdef __createChildrenForDiscrete(self, InstanceList data, int attributeIndex, RandomForestParameter parameter, bint isStump)
+    cpdef __createChildrenForContinuous(self, InstanceList data, int attributeIndex, double splitValue, RandomForestParameter parameter,
                                       bint isStump)
     cpdef str predict(self, Instance instance)
     cpdef dict predictProbabilityDistribution(self, Instance instance)

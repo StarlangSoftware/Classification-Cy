@@ -68,15 +68,14 @@ cdef class DecisionNode(object):
         best_attribute = -1
         best_split_value = 0
         self.__condition = condition
-        self.__data = data
         self.__classLabelsDistribution = DiscreteDistribution()
-        labels = self.__data.getClassLabels()
+        labels = data.getClassLabels()
         for label in labels:
             self.__classLabelsDistribution.addItem(label)
         self.__class_label = Model.getMaximum(labels)
         self.leaf = True
         self.children = []
-        class_labels = self.__data.getDistinctClassLabels()
+        class_labels = data.getDistinctClassLabels()
         if len(class_labels) == 1:
             return
         if isStump and condition is not None:
@@ -104,7 +103,7 @@ cdef class DecisionNode(object):
                             best_split_value = k
                         class_distribution.addDistribution(distribution)
             elif isinstance(data.get(0).getAttribute(index), DiscreteAttribute):
-                entropy = self.__entropyForDiscreteAttribute(index)
+                entropy = self.__entropyForDiscreteAttribute(data, index)
                 if entropy + self.EPSILON < best_entropy:
                     best_entropy = entropy
                     best_attribute = index
@@ -131,16 +130,19 @@ cdef class DecisionNode(object):
         if best_attribute != -1:
             self.leaf = False
             if isinstance(data.get(0).getAttribute(best_attribute), DiscreteIndexedAttribute):
-                self.__createChildrenForDiscreteIndexed(attributeIndex=best_attribute,
+                self.__createChildrenForDiscreteIndexed(data=data,
+                                                        attributeIndex=best_attribute,
                                                         attributeValue=best_split_value,
                                                         parameter=parameter,
                                                         isStump=isStump)
             elif isinstance(data.get(0).getAttribute(best_attribute), DiscreteAttribute):
-                self.__createChildrenForDiscrete(attributeIndex=best_attribute,
+                self.__createChildrenForDiscrete(data=data,
+                                                 attributeIndex=best_attribute,
                                                  parameter=parameter,
                                                  isStump=isStump)
             elif isinstance(data.get(0).getAttribute(best_attribute), ContinuousAttribute):
-                self.__createChildrenForContinuous(attributeIndex=best_attribute,
+                self.__createChildrenForContinuous(data=data,
+                                                   attributeIndex=best_attribute,
                                                    splitValue=best_split_value,
                                                    parameter=parameter,
                                                    isStump=isStump)
@@ -171,7 +173,7 @@ cdef class DecisionNode(object):
             self.__class_label = inputFile.readline().strip()
             self.__classLabelsDistribution = Model.loadClassDistribution(inputFile)
 
-    cpdef __entropyForDiscreteAttribute(self, int attributeIndex):
+    cpdef __entropyForDiscreteAttribute(self, InstanceList data, int attributeIndex):
         """
         The entropyForDiscreteAttribute method takes an attributeIndex and creates an ArrayList of DiscreteDistribution.
         Then loops through the distributions and calculates the total entropy.
@@ -190,12 +192,13 @@ cdef class DecisionNode(object):
         cdef list distributions
         cdef DiscreteDistribution distribution
         total = 0.0
-        distributions = self.__data.attributeClassDistribution(attributeIndex)
+        distributions = data.attributeClassDistribution(attributeIndex)
         for distribution in distributions:
-            total += (distribution.getSum() / self.__data.size()) * distribution.entropy()
+            total += (distribution.getSum() / data.size()) * distribution.entropy()
         return total
 
     cpdef __createChildrenForDiscreteIndexed(self,
+                                             InstanceList data,
                                              int attributeIndex,
                                              int attributeValue,
                                              RandomForestParameter parameter,
@@ -216,13 +219,13 @@ cdef class DecisionNode(object):
             Refers to decision trees with only 1 splitting rule.
         """
         cdef Partition children_data
-        children_data = Partition(self.__data, attributeIndex, attributeValue)
+        children_data = Partition(data, attributeIndex, attributeValue)
         self.children.append(
             DecisionNode(data=children_data.get(0),
                          condition=DecisionCondition(attributeIndex,
                                            DiscreteIndexedAttribute("",
                                                                     attributeValue,
-                                                                    self.__data.get(0).getAttribute(attributeIndex).getMaxIndex())),
+                                                                    data.get(0).getAttribute(attributeIndex).getMaxIndex())),
                          parameter=parameter,
                          isStump=isStump))
         self.children.append(
@@ -230,11 +233,12 @@ cdef class DecisionNode(object):
                          condition=DecisionCondition(attributeIndex,
                                            DiscreteIndexedAttribute("",
                                                                     -1,
-                                                                    self.__data.get(0).getAttribute(attributeIndex).getMaxIndex())),
+                                                                    data.get(0).getAttribute(attributeIndex).getMaxIndex())),
                          parameter=parameter,
                          isStump=isStump))
 
     cpdef __createChildrenForDiscrete(self,
+                                      InstanceList data,
                                       int attributeIndex,
                                       RandomForestParameter parameter,
                                       bint isStump):
@@ -254,16 +258,20 @@ cdef class DecisionNode(object):
         cdef list value_list
         cdef Partition children_data
         cdef int i
-        value_list = self.__data.getAttributeValueList(attributeIndex)
-        children_data = Partition(self.__data, attributeIndex)
+        value_list = data.getAttributeValueList(attributeIndex)
+        children_data = Partition(data, attributeIndex)
         for i in range(len(value_list)):
             self.children.append(DecisionNode(data=children_data.get(i),
                                               condition=DecisionCondition(attributeIndex, DiscreteAttribute(value_list[i])),
                                               parameter=parameter,
                                               isStump=isStump))
 
-    cpdef __createChildrenForContinuous(self, int attributeIndex, double splitValue, RandomForestParameter parameter,
-                                      bint isStump):
+    cpdef __createChildrenForContinuous(self,
+                                        InstanceList data,
+                                        int attributeIndex,
+                                        double splitValue,
+                                        RandomForestParameter parameter,
+                                        bint isStump):
         """
         The createChildrenForContinuous method creates a list of DecisionNodes as children and a partition with respect
         to continuous attribute and the given split value.
@@ -280,7 +288,7 @@ cdef class DecisionNode(object):
             Split value is used for partitioning.
         """
         cdef Partition children_data
-        children_data = Partition(self.__data, attributeIndex, splitValue)
+        children_data = Partition(data, attributeIndex, splitValue)
         self.children.append(DecisionNode(children_data.get(0),
                                           DecisionCondition(attributeIndex, ContinuousAttribute(splitValue), "<"),
                                           parameter, isStump))
@@ -309,7 +317,7 @@ cdef class DecisionNode(object):
         cdef DecisionNode node
         if isinstance(instance, CompositeInstance):
             possible_class_labels = instance.getPossibleClassLabels()
-            distribution = self.__data.classDistribution()
+            distribution = self.__classLabelsDistribution
             predicted_class = distribution.getMaxItemIncludeTheseOnly(possible_class_labels)
             if self.leaf:
                 return predicted_class
@@ -338,4 +346,4 @@ cdef class DecisionNode(object):
             for node in self.children:
                 if node.__condition.satisfy(instance):
                     return node.predictProbabilityDistribution(instance)
-            return self.__data.classDistribution().getProbabilityDistribution()
+            return self.__classLabelsDistribution.getProbabilityDistribution()
