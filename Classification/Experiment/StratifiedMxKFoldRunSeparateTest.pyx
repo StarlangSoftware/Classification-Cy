@@ -34,12 +34,12 @@ cdef class StratifiedMxKFoldRunSeparateTest(StratifiedKFoldRunSeparateTest):
         cdef Partition partition
         cdef StratifiedKFoldCrossValidation crossValidation
         result = ExperimentPerformance()
+        instance_list = experiment.getDataSet().getInstanceList()
+        partition = Partition(instanceList=instance_list,
+                              ratio=0.25,
+                              seed=experiment.getParameter().getSeed(),
+                              stratified=True)
         for j in range(self.M):
-            instance_list = experiment.getDataSet().getInstanceList()
-            partition = Partition(instanceList=instance_list,
-                                  ratio=0.25,
-                                  seed=experiment.getParameter().getSeed(),
-                                  stratified=True)
             cross_validation = StratifiedKFoldCrossValidation(instance_lists=Partition(partition.get(1)).getLists(),
                                                              K=self.K,
                                                              seed=experiment.getParameter().getSeed())
