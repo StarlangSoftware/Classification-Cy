@@ -24,4 +24,8 @@ cdef class Knn(Classifier):
                               distanceMetric=parameters.getDistanceMetric())
 
     cpdef loadModel(self, str fileName):
+        """
+        Loads the K-nearest neighbor model from an input file.
+        :param fileName: File name of the K-nearest neighbor model.
+        """
         self.model = KnnModel(fileName)

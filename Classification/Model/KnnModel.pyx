@@ -29,23 +29,16 @@ cdef class KnnModel(Model):
         self.__distance_metric = distanceMetric
 
     cpdef constructor2(self, str fileName):
+        """
+        Loads a K-nearest neighbor model from an input model file.
+        :param fileName: Model file name.
+        """
         cdef object inputFile
         self.__distance_metric = EuclidianDistance()
         inputFile = open(fileName, 'r')
         self.__k = int(inputFile.readline().strip())
         self.__data = self.loadInstanceList(inputFile)
         inputFile.close()
-
-    cpdef InstanceList loadInstanceList(self, object inputFile):
-        cdef list types
-        cdef int instance_count, i
-        cdef InstanceList instance_list
-        types = inputFile.readline().strip().split(" ")
-        instance_count = int(inputFile.readline().strip())
-        instance_list = InstanceList()
-        for i in range(instance_count):
-            instance_list.add(self.loadInstance(inputFile.readline().strip(), types))
-        return instance_list
 
     def __init__(self,
                  data: object,
@@ -81,6 +74,11 @@ cdef class KnnModel(Model):
         return predicted_class
 
     cpdef dict predictProbability(self, Instance instance):
+        """
+        Calculates the posterior probability distribution for the given instance according to K-means model.
+        :param instance: Instance for which posterior probability distribution is calculated.
+        :return: Posterior probability distribution for the given instance.
+        """
         cdef InstanceList nearest_neighbors
         nearest_neighbors = self.nearestNeighbors(instance)
         return nearest_neighbors.classDistribution().getProbabilityDistribution()

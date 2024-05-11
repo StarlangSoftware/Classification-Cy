@@ -16,6 +16,10 @@ cdef class NaiveBayesModel(GaussianModel):
         self.prior_distribution = priorDistribution
 
     cpdef constructor2(self, str fileName):
+        """
+        Loads a naive Bayes model from an input model file.
+        :param fileName: Model file name.
+        """
         cdef object inputFile
         cdef int size
         inputFile = open(fileName, mode='r', encoding='utf-8')

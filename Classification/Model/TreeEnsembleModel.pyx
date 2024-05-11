@@ -17,6 +17,10 @@ cdef class TreeEnsembleModel(Model):
         self.__forest = forest
 
     cpdef constructor2(self, str fileName):
+        """
+        Loads a tree ensemble model such as Random Forest model or Bagging model from an input model file.
+        :param fileName: Model file name.
+        """
         cdef object inputFile
         cdef int number_of_trees, i
         inputFile = open(fileName, mode='r', encoding='utf-8')
@@ -55,6 +59,11 @@ cdef class TreeEnsembleModel(Model):
         return distribution.getMaxItem()
 
     cpdef dict predictProbability(self, Instance instance):
+        """
+        Calculates the posterior probability distribution for the given instance according to ensemble tree model.
+        :param instance: Instance for which posterior probability distribution is calculated.
+        :return: Posterior probability distribution for the given instance.
+        """
         distribution = DiscreteDistribution()
         for tree in self.__forest:
             distribution.addItem(tree.predict(instance))

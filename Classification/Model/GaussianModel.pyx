@@ -11,6 +11,11 @@ cdef class GaussianModel(ValidatedModel):
         pass
 
     cpdef loadPriorDistribution(self, object inputFile):
+        """
+        Loads the prior probability distribution from an input model file.
+        :param inputFile: Input model file.
+        :return: Prior probability distribution.
+        """
         cdef int size, i, j
         cdef str line
         cdef list items
@@ -24,6 +29,12 @@ cdef class GaussianModel(ValidatedModel):
         return size
 
     cpdef dict loadVectors(self, object inputFile, int size):
+        """
+        Loads hash map of vectors from input model file.
+        :param inputFile: Input model file.
+        :param size: Number of vectors to be read from input model file.
+        :return: Dictionary of vectors.
+        """
         cdef dict hash_map
         cdef int i, j
         cdef str line

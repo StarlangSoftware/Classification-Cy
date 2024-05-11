@@ -7,6 +7,10 @@ from Classification.Performance.ClassificationPerformance cimport Classification
 cdef class LinearPerceptronModel(NeuralNetworkModel):
 
     cpdef constructor1(self, InstanceList trainSet):
+        """
+        Constructor that sets the NeuralNetworkModel nodes with given InstanceList.
+        :param trainSet: InstanceList that is used to train.
+        """
         super().__init__(trainSet)
 
     cpdef constructor2(self,
@@ -59,6 +63,10 @@ cdef class LinearPerceptronModel(NeuralNetworkModel):
         self.W = best_w
 
     cpdef constructor3(self, str fileName):
+        """
+        Loads a linear perceptron model from an input model file.
+        :param fileName: Name of the input model file.
+        """
         cdef object inputFile
         inputFile = open(fileName, mode='r', encoding='utf-8')
         self.loadClassLabels(inputFile)

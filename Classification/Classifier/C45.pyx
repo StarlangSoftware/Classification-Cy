@@ -36,4 +36,8 @@ cdef class C45(Classifier):
         self.model = tree
 
     cpdef loadModel(self, str fileName):
+        """
+        Loads the decision tree model from an input file.
+        :param fileName: File name of the decision tree model.
+        """
         self.model = DecisionTree(fileName)

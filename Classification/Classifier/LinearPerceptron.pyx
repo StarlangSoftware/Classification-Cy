@@ -32,4 +32,8 @@ cdef class LinearPerceptron(Classifier):
                                            parameters=parameters)
 
     cpdef loadModel(self, str fileName):
+        """
+        Loads the linear perceptron model from an input file.
+        :param fileName: File name of the linear perceptron model.
+        """
         self.model = LinearPerceptronModel(fileName)

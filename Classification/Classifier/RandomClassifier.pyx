@@ -21,4 +21,8 @@ cdef class RandomClassifier(Classifier):
                                  seed=parameters.getSeed())
 
     cpdef loadModel(self, str fileName):
+        """
+        Loads the random classifier model from an input file.
+        :param fileName: File name of the random classifier model.
+        """
         self.model = RandomModel(fileName)

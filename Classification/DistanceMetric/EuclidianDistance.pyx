@@ -8,6 +8,13 @@ cdef class EuclidianDistance(DistanceMetric):
     cpdef double distance(self,
                           Instance instance1,
                           Instance instance2):
+        """
+        Calculates Euclidian distance between two instances. For continuous features: \sum_{i=1}^d (x_i^(1) - x_i^(2))^2,
+        For discrete features: \sum_{i=1}^d 1(x_i^(1) == x_i^(2))
+        :param instance1: First instance
+        :param instance2: Second instance
+        :return: Euclidian distance between two instances.
+        """
         cdef double result
         cdef int i
         result = 0

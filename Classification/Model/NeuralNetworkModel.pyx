@@ -233,6 +233,11 @@ cdef class NeuralNetworkModel(ValidatedModel):
             return self.class_labels[self.y.maxIndex()]
 
     cpdef dict predictProbability(self, Instance instance):
+        """
+        Calculates the posterior probability distribution for the given instance according to neural network model.
+        :param instance: Instance for which posterior probability distribution is calculated.
+        :return: Posterior probability distribution for the given instance.
+        """
         self.createInputVector(instance)
         self.calculateOutput()
         result = {}
@@ -241,6 +246,10 @@ cdef class NeuralNetworkModel(ValidatedModel):
         return result
 
     cpdef loadClassLabels(self, object inputFile):
+        """
+        Loads the class labels from input model file.
+        :param inputFile: Input model file.
+        """
         cdef list items
         cdef int i
         items = inputFile.readline().strip().split(" ")
@@ -251,6 +260,11 @@ cdef class NeuralNetworkModel(ValidatedModel):
             self.class_labels.append(inputFile.readline().strip())
 
     cpdef loadActivationFunction(self, object inputFile):
+        """
+        Loads the activation function from an input model file.
+        :param inputFile: Input model file.
+        :return: Activation function read.
+        """
         cdef str line
         line = inputFile.readline().strip()
         if line == "TANH":

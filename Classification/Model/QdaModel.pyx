@@ -32,6 +32,10 @@ cdef class QdaModel(LdaModel):
         self.w0 = w0
 
     cpdef constructor2(self, str fileName):
+        """
+        Loads a quadratic discriminant analysis model from an input model file.
+        :param fileName: Model file name.
+        """
         cdef object inputFile
         cdef int size, i
         cdef str c

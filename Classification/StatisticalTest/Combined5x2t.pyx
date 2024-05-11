@@ -11,6 +11,12 @@ cdef class Combined5x2t(PairedTest):
     cpdef __testStatistic(self,
                           ExperimentPerformance classifier1,
                           ExperimentPerformance classifier2):
+        """
+        Calculates the test statistic of the combined 5x2 cv t test.
+        :param classifier1: Performance (error rate or accuracy) results of the first classifier.
+        :param classifier2: Performance (error rate or accuracy) results of the second classifier.
+        :return: Given the performances of two classifiers, the test statistic of the combined 5x2 cv t test.
+        """
         cdef list difference
         cdef int i
         cdef double denominator, numerator, mean, variance
@@ -38,6 +44,13 @@ cdef class Combined5x2t(PairedTest):
     cpdef StatisticalTestResult compare(self,
                                         ExperimentPerformance classifier1,
                                         ExperimentPerformance classifier2):
+        """
+        Compares two classification algorithms based on their performances (accuracy or error rate) using combined 5x2
+        cv t test.
+        :param classifier1: Performance (error rate or accuracy) results of the first classifier.
+        :param classifier2: Performance (error rate or accuracy) results of the second classifier.
+        :return: Statistical test result of the comparison.
+        """
         cdef double statistic
         cdef int degree_of_freedom
         statistic = self.__testStatistic(classifier1, classifier2)

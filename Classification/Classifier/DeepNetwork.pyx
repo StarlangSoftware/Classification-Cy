@@ -30,4 +30,8 @@ cdef class DeepNetwork(Classifier):
                                       parameters=parameters)
 
     cpdef loadModel(self, str fileName):
+        """
+        Loads the deep network model from an input file.
+        :param fileName: File name of the deep network model.
+        """
         self.model = DeepNetworkModel(fileName)

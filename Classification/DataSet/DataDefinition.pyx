@@ -19,11 +19,22 @@ cdef class DataDefinition(object):
         self.__attributeTypes = attributeTypes
 
     cpdef int numberOfValues(self, int attributeIndex):
+        """
+        Returns number of distinct values for a given discrete attribute with index attributeIndex.
+        :param attributeIndex: Index of the discrete attribute.
+        :return: Number of distinct values for a given discrete attribute
+        """
         return len(self.__attributeValueList[attributeIndex])
 
     cpdef int featureValueIndex(self,
                           int attributeIndex,
                           str value: str):
+        """
+        Returns the index of the given value in the values list of the attributeIndex'th discrete attribute.
+        :param attributeIndex: Index of the discrete attribute.
+        :param value: Value of the discrete attribute
+        :return: Index of the given value in the values list of the discrete attribute.
+        """
         cdef int i
         for i in range(len(self.__attributeValueList[attributeIndex])):
             if self.__attributeValueList[attributeIndex][i] == value:

@@ -1,6 +1,8 @@
 from io import TextIOWrapper
 
 from DataStructure.CounterHashMap cimport CounterHashMap
+
+from Classification.InstanceList.InstanceList cimport InstanceList
 from Math.DiscreteDistribution cimport DiscreteDistribution
 from Math.Matrix cimport Matrix
 
@@ -83,3 +85,14 @@ cdef class Model(object):
         for label in classLabels:
             frequencies.put(label)
         return frequencies.max()
+
+    cpdef InstanceList loadInstanceList(self, object inputFile):
+        cdef list types
+        cdef int instance_count, i
+        cdef InstanceList instance_list
+        types = inputFile.readline().strip().split(" ")
+        instance_count = int(inputFile.readline().strip())
+        instance_list = InstanceList()
+        for i in range(instance_count):
+            instance_list.add(self.loadInstance(inputFile.readline().strip(), types))
+        return instance_list

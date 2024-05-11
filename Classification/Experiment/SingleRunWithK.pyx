@@ -27,6 +27,14 @@ cdef class SingleRunWithK(SingleRun):
                         Classifier classifier,
                         Parameter parameter,
                         CrossValidation crossValidation):
+        """
+        Runs first fold of a K fold cross-validated experiment for the given classifier with the given parameters.
+        The experiment result will be returned.
+        :param classifier: Classifier for the experiment
+        :param parameter: Hyperparameters of the classifier of the experiment
+        :param crossValidation: K-fold crossvalidated dataset.
+        :return: The experiment result of the first fold of the K-fold cross-validated experiment.
+        """
         cdef InstanceList train_set, test_set
         train_set = InstanceList(crossValidation.getTrainFold(0))
         test_set = InstanceList(crossValidation.getTestFold(0))

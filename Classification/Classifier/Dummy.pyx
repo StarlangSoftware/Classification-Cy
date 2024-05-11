@@ -23,4 +23,8 @@ cdef class Dummy(Classifier):
         self.model = DummyModel(trainSet)
 
     cpdef loadModel(self, str fileName):
+        """
+        Loads the dummy model from an input file.
+        :param fileName: File name of the dummy model.
+        """
         self.model = DummyModel(fileName)

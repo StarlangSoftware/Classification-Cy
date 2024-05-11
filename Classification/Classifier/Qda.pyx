@@ -56,4 +56,8 @@ cdef class Qda(Classifier):
         self.model = QdaModel(prior_distribution, W, w, w0)
 
     cpdef loadModel(self, str fileName):
+        """
+        Loads the Qda model from an input file.
+        :param fileName: File name of the Qda model.
+        """
         self.model = QdaModel(fileName)

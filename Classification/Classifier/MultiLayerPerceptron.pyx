@@ -32,4 +32,8 @@ cdef class MultiLayerPerceptron(Classifier):
                                                parameters=parameters)
 
     cpdef loadModel(self, str fileName):
+        """
+        Loads the multi-layer perceptron model from an input file.
+        :param fileName: File name of the multi-layer perceptron model.
+        """
         self.model = MultiLayerPerceptronModel(fileName)

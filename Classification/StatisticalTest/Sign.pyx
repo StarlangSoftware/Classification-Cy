@@ -10,6 +10,12 @@ cdef class Sign(PairedTest):
     cpdef int __binomial(self,
                          int m,
                          int n):
+        """
+        Calculates m of n that is C(n, m)
+        :param m: m in C(m, n)
+        :param n: n in C(m, n)
+        :return: C(m, n)
+        """
         if n == 0 or m == n:
             return 1
         else:
@@ -18,6 +24,12 @@ cdef class Sign(PairedTest):
     cpdef StatisticalTestResult compare(self,
                                         ExperimentPerformance classifier1,
                                         ExperimentPerformance classifier2):
+        """
+        Compares two classification algorithms based on their performances (accuracy or error rate) using sign test.
+        :param classifier1: Performance (error rate or accuracy) results of the first classifier.
+        :param classifier2: Performance (error rate or accuracy) results of the second classifier.
+        :return: Statistical test result of the comparison.
+        """
         cdef int plus, minus, i, total
         cdef double p_value
         if classifier1.numberOfExperiments() != classifier2.numberOfExperiments():

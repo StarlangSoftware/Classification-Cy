@@ -7,10 +7,23 @@ cdef class StatisticalTestResult(object):
     def __init__(self,
                  pValue: float,
                  onlyTwoTailed: bool):
+        """
+        Constructor of the StatisticalTestResult. It sets the attribute values.
+        :param pValue: p value of the statistical test result
+        :param onlyTwoTailed: True, if this test applicable only two tailed tests, false otherwise.
+        """
         self.__pValue = pValue
         self.__only_two_tailed = onlyTwoTailed
 
     cpdef object oneTailed(self, double alpha):
+        """
+        Returns reject or failed to reject, depending on the alpha level and p value of the statistical test that checks
+        one tailed null hypothesis such as mu1 < mu2. If p value is less than the alpha level, the test rejects the null
+        hypothesis. Otherwise, it fails to reject the null hypothesis.
+        :param alpha: Alpha level of the test
+        :return: If p value is less than the alpha level, the test rejects the null hypothesis. Otherwise, it fails to
+        reject the null hypothesis.
+        """
         if self.__only_two_tailed:
             raise StatisticalTestNotApplicable("One tailed option is not available for this test. The distribution is "
                                                "one tailed distribution.")
@@ -20,6 +33,19 @@ cdef class StatisticalTestResult(object):
             return StatisticalTestResultType.FAILED_TO_REJECT
 
     cpdef object twoTailed(self, double alpha):
+        """
+        Returns reject or failed to reject, depending on the alpha level and p value of the statistical test that checks
+        one tailed null hypothesis such as mu1 < mu2 or two tailed null hypothesis such as mu1 = mu2. If the null
+        hypothesis is two tailed, and p value is less than the alpha level, the test rejects the null hypothesis.
+        Otherwise, it fails to reject the null hypothesis. If the null  hypothesis is one tailed, and p value is less
+        than alpha / 2 or p value is larger than 1 - alpha / 2, the test  rejects the null  hypothesis. Otherwise, it
+        fails to reject the null hypothesis.
+        :param alpha: Alpha level of the test
+        :return: If the null  hypothesis is two tailed, and p value is less than the alpha level, the test rejects the
+        null hypothesis.  Otherwise, it fails to reject the null hypothesis. If the null  hypothesis is one tailed, and
+        p value is less  than alpha / 2 or p value is larger than 1 - alpha / 2, the test  rejects the null  hypothesis.
+        Otherwise, it  fails to reject the null hypothesis.
+        """
         if self.__only_two_tailed:
             if self.__pValue < alpha:
                 return StatisticalTestResultType.REJECT
@@ -30,4 +56,8 @@ cdef class StatisticalTestResult(object):
                 return StatisticalTestResultType.REJECT
 
     cpdef double getPValue(self):
+        """
+        Returns the p value of the statistical test result
+        :return: p value of the statistical test result
+        """
         return self.__pValue

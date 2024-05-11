@@ -85,4 +85,8 @@ cdef class NaiveBayes(Classifier):
             self.trainContinuousVersion(prior_distribution, class_lists)
 
     cpdef loadModel(self, str fileName):
+        """
+        Loads the naive Bayes model from an input file.
+        :param fileName: File name of the naive Bayes model.
+        """
         self.model = NaiveBayesModel(fileName)

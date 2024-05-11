@@ -11,6 +11,12 @@ cdef class Pairedt(PairedTest):
     cpdef __testStatistic(self,
                           ExperimentPerformance classifier1,
                           ExperimentPerformance classifier2):
+        """
+        Calculates the test statistic of the paired t test.
+        :param classifier1: Performance (error rate or accuracy) results of the first classifier.
+        :param classifier2: Performance (error rate or accuracy) results of the second classifier.
+        :return: Given the performances of two classifiers, the test statistic of the paired t test.
+        """
         cdef list difference
         cdef int i
         cdef double total, mean, standard_deviation
@@ -34,6 +40,12 @@ cdef class Pairedt(PairedTest):
     cpdef StatisticalTestResult compare(self,
                                         ExperimentPerformance classifier1,
                                         ExperimentPerformance classifier2):
+        """
+        Compares two classification algorithms based on their performances (accuracy or error rate) using paired t test.
+        :param classifier1: Performance (error rate or accuracy) results of the first classifier.
+        :param classifier2: Performance (error rate or accuracy) results of the second classifier.
+        :return: Statistical test result of the comparison.
+        """
         cdef double statistic
         cdef int degree_of_freedom
         statistic = self.__testStatistic(classifier1, classifier2)

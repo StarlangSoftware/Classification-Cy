@@ -25,6 +25,10 @@ cdef class LdaModel(GaussianModel):
         self.w0 = w0
 
     cpdef constructor2(self, str fileName):
+        """
+        Loads a Linear Discriminant Analysis model from an input model file.
+        :param fileName: Model file name.
+        """
         cdef object inputFile
         cdef int size
         inputFile = open(fileName, mode='r', encoding='utf-8')
@@ -43,6 +47,11 @@ cdef class LdaModel(GaussianModel):
                 self.constructor2(priorDistribution)
 
     cpdef loadWandW0(self, object inputFile, int size):
+        """
+        Loads w0 and w hash maps from an input file. The number of items in the hash map is given by the parameter size.
+        :param inputFile: Input file
+        :param size: Size of the hash map
+        """
         cdef int i
         cdef str line
         cdef list items

@@ -97,6 +97,10 @@ cdef class MultiLayerPerceptronModel(LinearPerceptronModel):
         self.__V = best_v
 
     cpdef constructor3(self, str fileName):
+        """
+        Loads a multi-layer perceptron model from an input model file.
+        :param fileName: Model file name.
+        """
         cdef object inputFile
         inputFile = open(fileName, mode='r', encoding='utf-8')
         self.loadClassLabels(inputFile)

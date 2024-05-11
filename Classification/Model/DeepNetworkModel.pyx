@@ -99,6 +99,10 @@ cdef class DeepNetworkModel(NeuralNetworkModel):
             self.__weights.append(m)
 
     cpdef constructor2(self, str fileName):
+        """
+        Loads a deep network model from an input model file.
+        :param fileName: Model file name.
+        """
         cdef object inputFile
         cdef int i
         inputFile = open(fileName, mode='r', encoding='utf-8')

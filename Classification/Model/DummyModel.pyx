@@ -16,6 +16,10 @@ cdef class DummyModel(Model):
         self.distribution = trainSet.classDistribution()
 
     cpdef constructor2(self, str fileName):
+        """
+        Loads a dummy model from an input model file.
+        :param fileName: Model file name.
+        """
         cdef object inputFile
         cdef int size, i, count, j
         cdef str line
@@ -53,4 +57,9 @@ cdef class DummyModel(Model):
             return self.distribution.getMaxItem()
 
     cpdef dict predictProbability(self, Instance instance):
+        """
+        Calculates the posterior probability distribution for the given instance according to dummy model.
+        :param instance: Instance for which posterior probability distribution is calculated.
+        :return: Posterior probability distribution for the given instance.
+        """
         return self.distribution.getProbabilityDistribution()

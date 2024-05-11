@@ -28,6 +28,11 @@ cdef class StratifiedMxKFoldRunSeparateTest(StratifiedKFoldRunSeparateTest):
         self.M = M
 
     cpdef ExperimentPerformance execute(self, Experiment experiment):
+        """
+        Execute the Stratified MxK-fold cross-validation with the given classifier on the given data set using the given parameters.
+        :param experiment: Experiment to be run.
+        :return: An ExperimentPerformance instance.
+        """
         cdef ExperimentPerformance result
         cdef int j
         cdef InstanceList instance_list

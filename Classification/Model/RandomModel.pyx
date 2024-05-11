@@ -20,6 +20,10 @@ cdef class RandomModel(Model):
         random.seed(seed)
 
     cpdef constructor2(self, str fileName):
+        """
+        Loads a random classifier model from an input model file.
+        :param fileName: Model file name.
+        """
         cdef object inputFile
         cdef int size, i
         inputFile = open(fileName, mode='r', encoding='utf-8')
@@ -67,6 +71,11 @@ cdef class RandomModel(Model):
             return self.__class_labels[index]
 
     cpdef dict predictProbability(self, Instance instance):
+        """
+        Calculates the posterior probability distribution for the given instance according to random model.
+        :param instance: Instance for which posterior probability distribution is calculated.
+        :return: Posterior probability distribution for the given instance.
+        """
         result = {}
         for classLabel in self.__class_labels:
             result[classLabel] = 1.0 / len(self.__class_labels)
