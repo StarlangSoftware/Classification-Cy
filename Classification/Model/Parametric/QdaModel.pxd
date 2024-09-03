@@ -3,7 +3,7 @@ from Classification.Parameter.Parameter cimport Parameter
 from Math.DiscreteDistribution cimport DiscreteDistribution
 
 from Classification.Instance.Instance cimport Instance
-from Classification.Model.LdaModel cimport LdaModel
+from Classification.Model.Parametric.LdaModel cimport LdaModel
 
 cdef class QdaModel(LdaModel):
 

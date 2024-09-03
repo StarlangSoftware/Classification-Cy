@@ -1,5 +1,5 @@
 from Classification.InstanceList.InstanceList cimport InstanceList
-from Classification.Model.NeuralNetworkModel cimport NeuralNetworkModel
+from Classification.Model.NeuralNetwork.NeuralNetworkModel cimport NeuralNetworkModel
 from Classification.Parameter.DeepNetworkParameter cimport DeepNetworkParameter
 from Classification.Parameter.Parameter cimport Parameter
 

@@ -4,7 +4,7 @@ from Math.DiscreteDistribution cimport DiscreteDistribution
 from Classification.DistanceMetric.DistanceMetric cimport DistanceMetric
 from Classification.Instance.Instance cimport Instance
 from Classification.InstanceList.InstanceList cimport InstanceList
-from Classification.Model.GaussianModel cimport GaussianModel
+from Classification.Model.Parametric.GaussianModel cimport GaussianModel
 
 
 cdef class KMeansModel(GaussianModel):

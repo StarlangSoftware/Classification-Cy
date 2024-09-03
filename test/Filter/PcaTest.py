@@ -1,7 +1,7 @@
 import unittest
 
-from Classification.Model.KnnModel import KnnModel
-from Classification.Model.LinearPerceptronModel import LinearPerceptronModel
+from Classification.Model.NonParametric.KnnModel import KnnModel
+from Classification.Model.NeuralNetwork.LinearPerceptronModel import LinearPerceptronModel
 from Classification.DistanceMetric.EuclidianDistance import EuclidianDistance
 from Classification.Filter.Pca import Pca
 from Classification.Parameter.KnnParameter import KnnParameter

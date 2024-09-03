@@ -1,6 +1,6 @@
 import unittest
 
-from Classification.Model.DeepNetworkModel import DeepNetworkModel
+from Classification.Model.NeuralNetwork.DeepNetworkModel import DeepNetworkModel
 from Classification.Parameter.DeepNetworkParameter import DeepNetworkParameter
 
 from Classification.Parameter.ActivationFunction import ActivationFunction

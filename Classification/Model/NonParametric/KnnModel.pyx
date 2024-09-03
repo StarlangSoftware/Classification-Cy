@@ -1,7 +1,7 @@
 from functools import cmp_to_key
 
 from Classification.DistanceMetric.EuclidianDistance cimport EuclidianDistance
-from Classification.Model.KnnInstance cimport KnnInstance
+from Classification.Model.NonParametric.KnnInstance cimport KnnInstance
 from Classification.Instance.CompositeInstance cimport CompositeInstance
 
 cdef class KnnModel(Model):

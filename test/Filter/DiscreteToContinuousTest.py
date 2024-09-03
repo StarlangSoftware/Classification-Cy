@@ -1,8 +1,8 @@
 import unittest
 
 from Classification.Model.DecisionTree.DecisionTree import DecisionTree
-from Classification.Model.KnnModel import KnnModel
-from Classification.Model.LinearPerceptronModel import LinearPerceptronModel
+from Classification.Model.NonParametric.KnnModel import KnnModel
+from Classification.Model.NeuralNetwork.LinearPerceptronModel import LinearPerceptronModel
 from Classification.DistanceMetric.EuclidianDistance import EuclidianDistance
 from Classification.Filter.DiscreteToContinuous import DiscreteToContinuous
 from Classification.Parameter.C45Parameter import C45Parameter

@@ -3,7 +3,7 @@ from Math.Matrix cimport Matrix
 from Math.Vector cimport Vector
 from Classification.Instance.Instance cimport Instance
 from Classification.InstanceList.InstanceList cimport InstanceList
-from Classification.Model.NeuralNetworkModel cimport NeuralNetworkModel
+from Classification.Model.NeuralNetwork.NeuralNetworkModel cimport NeuralNetworkModel
 from Classification.Performance.Performance cimport Performance
 
 

@@ -6,7 +6,7 @@ from Math.DiscreteDistribution cimport DiscreteDistribution
 from Math.Vector cimport Vector
 from Math.Matrix cimport Matrix
 
-from Classification.Model.LdaModel cimport LdaModel
+from Classification.Model.Parametric.LdaModel cimport LdaModel
 
 cdef class QdaModel(LdaModel):
 

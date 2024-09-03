@@ -3,7 +3,7 @@ from Classification.Parameter.Parameter cimport Parameter
 from Math.DiscreteDistribution cimport DiscreteDistribution
 
 from Classification.Instance.Instance cimport Instance
-from Classification.Model.GaussianModel cimport GaussianModel
+from Classification.Model.Parametric.GaussianModel cimport GaussianModel
 
 cdef class LdaModel(GaussianModel):
     cdef dict w0

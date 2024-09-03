@@ -2,7 +2,7 @@ from Classification.Parameter.Parameter cimport Parameter
 from Math.Matrix cimport Matrix
 
 from Classification.InstanceList.InstanceList cimport InstanceList
-from Classification.Model.LinearPerceptronModel cimport LinearPerceptronModel
+from Classification.Model.NeuralNetwork.LinearPerceptronModel cimport LinearPerceptronModel
 from Classification.Parameter.MultiLayerPerceptronParameter cimport MultiLayerPerceptronParameter
 
 cdef class MultiLayerPerceptronModel(LinearPerceptronModel):
