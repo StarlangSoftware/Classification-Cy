@@ -1,7 +1,7 @@
 cdef class Experiment(object):
 
     def __init__(self,
-                 classifier: Classifier,
+                 classifier: Model,
                  parameter: Parameter,
                  dataSet: DataSet):
         """
@@ -20,7 +20,7 @@ cdef class Experiment(object):
         self.__parameter = parameter
         self.__dataSet = dataSet
 
-    cpdef Classifier getClassifier(self):
+    cpdef Model getClassifier(self):
         """
         Accessor for the classifier attribute.
 

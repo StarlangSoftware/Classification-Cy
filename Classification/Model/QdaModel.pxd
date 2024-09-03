@@ -1,3 +1,5 @@
+from Classification.InstanceList.InstanceList cimport InstanceList
+from Classification.Parameter.Parameter cimport Parameter
 from Math.DiscreteDistribution cimport DiscreteDistribution
 
 from Classification.Instance.Instance cimport Instance
@@ -14,3 +16,5 @@ cdef class QdaModel(LdaModel):
                      dict w,
                      dict w0)
     cpdef constructor2(self, str fileName)
+    cpdef train(self, InstanceList trainSet, Parameter parameters)
+    cpdef loadModel(self, str fileName)

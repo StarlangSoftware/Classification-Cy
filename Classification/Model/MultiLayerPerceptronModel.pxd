@@ -1,3 +1,4 @@
+from Classification.Parameter.Parameter cimport Parameter
 from Math.Matrix cimport Matrix
 
 from Classification.InstanceList.InstanceList cimport InstanceList
@@ -16,3 +17,5 @@ cdef class MultiLayerPerceptronModel(LinearPerceptronModel):
                      InstanceList trainSet,
                      InstanceList validationSet,
                      MultiLayerPerceptronParameter parameters)
+    cpdef train(self, InstanceList trainSet, Parameter parameters)
+    cpdef loadModel(self, str fileName)

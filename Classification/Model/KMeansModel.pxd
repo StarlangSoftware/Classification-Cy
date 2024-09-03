@@ -1,3 +1,4 @@
+from Classification.Parameter.Parameter cimport Parameter
 from Math.DiscreteDistribution cimport DiscreteDistribution
 
 from Classification.DistanceMetric.DistanceMetric cimport DistanceMetric
@@ -18,3 +19,5 @@ cdef class KMeansModel(GaussianModel):
                        DistanceMetric distanceMetric)
     cpdef constructor2(self, str fileName)
     cpdef InstanceList loadInstanceList(self, object inputFile)
+    cpdef train(self, InstanceList trainSet, Parameter parameters)
+    cpdef loadModel(self, str fileName)

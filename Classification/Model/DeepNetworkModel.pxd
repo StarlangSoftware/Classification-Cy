@@ -1,7 +1,7 @@
 from Classification.InstanceList.InstanceList cimport InstanceList
 from Classification.Model.NeuralNetworkModel cimport NeuralNetworkModel
 from Classification.Parameter.DeepNetworkParameter cimport DeepNetworkParameter
-
+from Classification.Parameter.Parameter cimport Parameter
 
 cdef class DeepNetworkModel(NeuralNetworkModel):
 
@@ -17,3 +17,5 @@ cdef class DeepNetworkModel(NeuralNetworkModel):
                        InstanceList validationSet,
                        DeepNetworkParameter parameters)
     cpdef constructor2(self, str fileName)
+    cpdef train(self, InstanceList trainSet, Parameter parameters)
+    cpdef loadModel(self, str fileName)

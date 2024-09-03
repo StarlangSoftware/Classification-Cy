@@ -16,7 +16,7 @@ cdef class KFoldRun(MultipleRun):
         self.K = K
 
     cpdef runExperiment(self,
-                        Classifier classifier,
+                        Model classifier,
                         Parameter parameter,
                         ExperimentPerformance experimentPerformance,
                         CrossValidation crossValidation):

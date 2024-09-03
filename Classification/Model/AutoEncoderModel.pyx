@@ -1,37 +1,42 @@
 import copy
+
+from Classification.InstanceList.Partition cimport Partition
 from Classification.Parameter.MultiLayerPerceptronParameter cimport MultiLayerPerceptronParameter
 
 from Classification.Parameter.ActivationFunction import ActivationFunction
 
 cdef class AutoEncoderModel(NeuralNetworkModel):
 
-    def __init__(self,
-                 trainSet: InstanceList,
-                 validationSet: InstanceList,
-                 parameters: MultiLayerPerceptronParameter):
+    cpdef train(self,
+                InstanceList train,
+                Parameter params):
         """
-        The AutoEncoderModel method takes two InstanceLists as inputs; train set and validation set. First it allocates
-        the weights of W and V matrices using given MultiLayerPerceptronParameter and takes the clones of these
-        matrices as the bestW and bestV. Then, it gets the epoch and starts to iterate over them. First it shuffles the
-        train set and tries to find the new W and V matrices. At the end it tests the autoencoder with given validation
-        set and if its performance is better than the previous one, it reassigns the bestW and bestV matrices. Continue
-        to iterate with a lower learning rate till the end of an episode.
+        Training algorithm for auto encoders. An auto encoder is a neural network which attempts to replicate its input
+        at its output.
 
         PARAMETERS
         ----------
         trainSet : InstanceList
-            InstanceList to use as train set.
-        validationSet : InstanceList
-            InstanceList to use as validation set.
+            Training data given to the algorithm.
         parameters : MultiLayerPerceptronParameter
-            MultiLayerPerceptronParameter is used to get the parameters.
+            Parameters of the auto encoder.
         """
         cdef Matrix best_w, best_v, delta_v, delta_w
         cdef Performance best_performance, current_performance
         cdef int epoch, i, j
         cdef double learning_rate
+        cdef InstanceList trainSet, validationSet
+        cdef MultiLayerPerceptronParameter parameters
         cdef Vector hidden, hidden_biased, r_minus_y, one_minus_hidden, tmp_h, tmp_hidden
-        super().__init__(trainSet)
+        self.class_labels = train.getDistinctClassLabels()
+        self.d = train.get(0).continuousAttributeSize()
+        partition = Partition(instanceList=train,
+                              ratio=0.2,
+                              seed=params.getSeed(),
+                              stratified=True)
+        trainSet = partition.get(1)
+        validationSet = partition.get(0)
+        parameters = params
         self.K = trainSet.get(0).continuousAttributeSize()
         self.__allocateWeights(parameters.getHiddenNodes(), parameters.getSeed())
         best_w = copy.deepcopy(self.__W)
@@ -135,3 +140,19 @@ cdef class AutoEncoderModel(NeuralNetworkModel):
         self.calculateForwardSingleHiddenLayer(W=self.__W,
                                                V=self.__V,
                                                activationFunction=ActivationFunction.SIGMOID)
+
+    cpdef Performance test(self, InstanceList testSet):
+        """
+        A performance test for an auto encoder with the given test set.
+
+        PARAMETERS
+        ----------
+        testSet : InstanceList
+            Test data (list of instances) to be tested.
+
+        RETURNS
+        -------
+        Performance
+            Error rate.
+        """
+        return self.testAutoEncoder(testSet)

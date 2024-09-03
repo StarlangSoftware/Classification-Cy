@@ -1,4 +1,5 @@
 from Classification.Instance.CompositeInstance cimport CompositeInstance
+from Classification.InstanceList.Partition cimport Partition
 from Classification.Performance.ClassificationPerformance cimport ClassificationPerformance
 
 
@@ -21,7 +22,7 @@ cdef class DecisionTree(ValidatedModel):
         self.__root = DecisionNode(inputFile)
         inputFile.close()
 
-    def __init__(self, root: object):
+    def __init__(self, root: object = None):
         if isinstance(root, DecisionNode):
             self.constructor1(root)
         elif isinstance(root, str):
@@ -87,3 +88,36 @@ cdef class DecisionTree(ValidatedModel):
             InstanceList to perform pruning.
         """
         self.pruneNode(self.__root, pruneSet)
+
+    cpdef train(self,
+                InstanceList trainSet,
+                Parameter parameters):
+        """
+        Training algorithm for C4.5 univariate decision tree classifier. 20 percent of the data are left aside for
+        pruning 80 percent of the data is used for constructing the tree.
+
+        PARAMETERS
+        ----------
+        trainSet : InstanceList
+            Training data given to the algorithm.
+        parameters: C45Parameter
+            Parameter of the C45 algorithm.
+        """
+        cdef Partition partition
+        cdef DecisionTree tree
+        if parameters.isPrune():
+            partition = Partition(instanceList=trainSet,
+                                  ratio=parameters.getCrossValidationRatio(),
+                                  seed=parameters.getSeed(),
+                                  stratified=True)
+            self.constructor1(DecisionNode(partition.get(1)))
+            self.prune(partition.get(0))
+        else:
+            self.constructor1(DecisionNode(trainSet))
+
+    cpdef loadModel(self, str fileName):
+        """
+        Loads the decision tree model from an input file.
+        :param fileName: File name of the decision tree model.
+        """
+        self.constructor2(fileName)

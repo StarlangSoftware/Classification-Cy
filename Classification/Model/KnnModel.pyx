@@ -4,14 +4,11 @@ from Classification.DistanceMetric.EuclidianDistance cimport EuclidianDistance
 from Classification.Model.KnnInstance cimport KnnInstance
 from Classification.Instance.CompositeInstance cimport CompositeInstance
 
-
 cdef class KnnModel(Model):
-
-
     cpdef constructor1(self,
-                     InstanceList data,
-                     int k,
-                     DistanceMetric distanceMetric):
+                       InstanceList data,
+                       int k,
+                       DistanceMetric distanceMetric):
         """
         Constructor that sets the data InstanceList, k value and the DistanceMetric.
 
@@ -41,7 +38,7 @@ cdef class KnnModel(Model):
         inputFile.close()
 
     def __init__(self,
-                 data: object,
+                 data: object = None,
                  k: int = None,
                  distanceMetric: DistanceMetric = None):
         if isinstance(data, InstanceList):
@@ -70,7 +67,7 @@ cdef class KnnModel(Model):
         if isinstance(instance, CompositeInstance) and nearest_neighbors.size() == 0:
             predicted_class = instance.getPossibleClassLabels()[0]
         else:
-            predicted_class = Model.getMaximum(nearest_neighbors.getClassLabels())
+            predicted_class = InstanceList.getMaximum(nearest_neighbors.getClassLabels())
         return predicted_class
 
     cpdef dict predictProbability(self, Instance instance):
@@ -119,10 +116,35 @@ cdef class KnnModel(Model):
         if isinstance(instance, CompositeInstance):
             possible_class_labels = instance.getPossibleClassLabels()
         for i in range(self.__data.size()):
-            if not isinstance(instance, CompositeInstance) or self.__data.get(i).getClassLabel() in possible_class_labels:
+            if not isinstance(instance, CompositeInstance) or self.__data.get(
+                    i).getClassLabel() in possible_class_labels:
                 instances.append(KnnInstance(self.__data.get(i), self.__distance_metric.distance(self.__data.get(i),
                                                                                                  instance)))
         instances.sort(key=cmp_to_key(self.makeComparator()))
         for i in range(min(self.__k, len(instances))):
             result.add(instances[i].getInstance())
         return result
+
+    cpdef train(self,
+                InstanceList trainSet,
+                Parameter parameters):
+        """
+        Training algorithm for K-nearest neighbor classifier.
+
+        PARAMETERS
+        ----------
+        trainSet : InstanceList
+            Training data given to the algorithm.
+        parameters : KnnParameter
+            Parameters of the Knn algorithm.
+        """
+        self.constructor1(data=trainSet,
+                          k=parameters.getK(),
+                          distanceMetric=parameters.getDistanceMetric())
+
+    cpdef loadModel(self, str fileName):
+        """
+        Loads the K-nearest neighbor model from an input file.
+        :param fileName: File name of the K-nearest neighbor model.
+        """
+        self.constructor2(fileName)

@@ -30,7 +30,7 @@ cdef class TreeEnsembleModel(Model):
             self.__forest.append(DecisionTree(DecisionNode(inputFile)))
         inputFile.close()
 
-    def __init__(self, forest: object):
+    def __init__(self, forest: object = None):
         if isinstance(forest, list):
             self.constructor1(forest)
         elif isinstance(forest, str):

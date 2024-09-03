@@ -1,3 +1,4 @@
+from Classification.Parameter.Parameter cimport Parameter
 from Math.Matrix cimport Matrix
 from Math.Vector cimport Vector
 from Classification.Instance.Instance cimport Instance
@@ -15,3 +16,6 @@ cdef class AutoEncoderModel(NeuralNetworkModel):
     cpdef Performance testAutoEncoder(self, InstanceList data)
     cpdef Vector __predictInput(self, Instance instance)
     cpdef calculateOutput(self)
+    cpdef train(self, InstanceList train, Parameter params)
+
+    cpdef Performance test(self, InstanceList testSet)

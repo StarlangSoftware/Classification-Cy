@@ -2,7 +2,7 @@ from Classification.DistanceMetric.DistanceMetric cimport DistanceMetric
 from Classification.Instance.Instance cimport Instance
 from Classification.InstanceList.InstanceList cimport InstanceList
 from Classification.Model.Model cimport Model
-
+from Classification.Parameter.Parameter cimport Parameter
 
 cdef class KnnModel(Model):
 
@@ -16,3 +16,5 @@ cdef class KnnModel(Model):
     cpdef InstanceList loadInstanceList(self, object inputFile)
     cpdef constructor1(self, InstanceList data, int k, DistanceMetric distanceMetric)
     cpdef constructor2(self, str fileName)
+    cpdef train(self, InstanceList trainSet, Parameter parameters)
+    cpdef loadModel(self, str fileName)

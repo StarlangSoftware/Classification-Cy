@@ -16,7 +16,7 @@ cdef class KFoldRunSeparateTest(KFoldRun):
         super().__init__(K)
 
     cpdef runExperimentSeparate(self,
-                                Classifier classifier,
+                                Model classifier,
                                 Parameter parameter,
                                 ExperimentPerformance experimentPerformance,
                                 CrossValidation crossValidation,

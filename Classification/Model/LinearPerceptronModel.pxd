@@ -1,3 +1,4 @@
+from Classification.Parameter.Parameter cimport Parameter
 from Math.Matrix cimport Matrix
 from Classification.InstanceList.InstanceList cimport InstanceList
 from Classification.Model.NeuralNetworkModel cimport NeuralNetworkModel
@@ -14,3 +15,5 @@ cdef class LinearPerceptronModel(NeuralNetworkModel):
                        InstanceList validationSet,
                        LinearPerceptronParameter parameters)
     cpdef constructor3(self, str fileName)
+    cpdef train(self, InstanceList trainSet, Parameter parameters)
+    cpdef loadModel(self, str fileName)

@@ -1,4 +1,6 @@
 import copy
+
+from Classification.InstanceList.Partition cimport Partition
 from Classification.Parameter.MultiLayerPerceptronParameter cimport MultiLayerPerceptronParameter
 from Classification.Performance.ClassificationPerformance cimport ClassificationPerformance
 from Classification.InstanceList.InstanceList cimport InstanceList
@@ -7,7 +9,6 @@ from Math.Vector cimport Vector
 from Classification.Parameter.ActivationFunction import ActivationFunction
 
 cdef class MultiLayerPerceptronModel(LinearPerceptronModel):
-
     cpdef __allocateWeights(self,
                             int H,
                             int seed):
@@ -27,9 +28,9 @@ cdef class MultiLayerPerceptronModel(LinearPerceptronModel):
                                              seed=seed)
 
     cpdef constructor4(self,
-                     InstanceList trainSet,
-                     InstanceList validationSet,
-                     MultiLayerPerceptronParameter parameters):
+                       InstanceList trainSet,
+                       InstanceList validationSet,
+                       MultiLayerPerceptronParameter parameters):
         """
         A constructor that takes InstanceLists as trainsSet and validationSet. It  sets the NeuralNetworkModel nodes
         with given InstanceList then creates an input vector by using given trainSet and finds error. Via the
@@ -110,7 +111,7 @@ cdef class MultiLayerPerceptronModel(LinearPerceptronModel):
         inputFile.close()
 
     def __init__(self,
-                 trainSet: object,
+                 trainSet: object = None,
                  validationSet: InstanceList = None,
                  parameters: MultiLayerPerceptronParameter = None):
         if isinstance(trainSet, InstanceList):
@@ -126,3 +127,34 @@ cdef class MultiLayerPerceptronModel(LinearPerceptronModel):
         self.calculateForwardSingleHiddenLayer(W=self.W,
                                                V=self.__V,
                                                activationFunction=self.__activation_function)
+
+    cpdef train(self,
+                InstanceList trainSet,
+                Parameter parameters):
+        """
+        Training algorithm for the multilayer perceptron algorithm. 20 percent of the data is separated as
+        cross-validation data used for selecting the best weights. 80 percent of the data is used for training the
+        multilayer perceptron with gradient descent.
+
+        PARAMETERS
+        ----------
+        trainSet : InstanceList
+            Training data given to the algorithm
+        parameters : MultiLayerPerceptronParameter
+            Parameters of the multilayer perceptron.
+        """
+        cdef Partition partition
+        partition = Partition(instanceList=trainSet,
+                              ratio=parameters.getCrossValidationRatio(),
+                              seed=parameters.getSeed(),
+                              stratified=True)
+        self.constructor2(trainSet=partition.get(1),
+                          validationSet=partition.get(0),
+                          parameters=parameters)
+
+    cpdef loadModel(self, str fileName):
+        """
+        Loads the multi-layer perceptron model from an input file.
+        :param fileName: File name of the multi-layer perceptron model.
+        """
+        self.constructor3(fileName)

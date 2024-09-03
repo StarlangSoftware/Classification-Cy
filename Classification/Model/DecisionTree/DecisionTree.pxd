@@ -2,7 +2,7 @@ from Classification.InstanceList.InstanceList cimport InstanceList
 from Classification.Model.DecisionTree.DecisionNode cimport DecisionNode
 from Classification.Model.ValidatedModel cimport ValidatedModel
 from Classification.Instance.Instance cimport Instance
-
+from Classification.Parameter.Parameter cimport Parameter
 
 cdef class DecisionTree(ValidatedModel):
 
@@ -14,3 +14,5 @@ cdef class DecisionTree(ValidatedModel):
     cpdef str predict(self, Instance instance)
     cpdef constructor1(self, DecisionNode root)
     cpdef constructor2(self, str fileName)
+    cpdef train(self, InstanceList trainSet, Parameter parameters)
+    cpdef loadModel(self, str fileName)

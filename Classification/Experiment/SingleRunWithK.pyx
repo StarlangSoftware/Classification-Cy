@@ -1,6 +1,6 @@
 from Sampling.CrossValidation cimport CrossValidation
 from Sampling.KFoldCrossValidation cimport KFoldCrossValidation
-from Classification.Classifier.Classifier cimport Classifier
+from Classification.Model.Model cimport Model
 from Classification.Experiment.Experiment cimport Experiment
 from Classification.Experiment.SingleRun cimport SingleRun
 from Classification.InstanceList.InstanceList cimport InstanceList
@@ -24,7 +24,7 @@ cdef class SingleRunWithK(SingleRun):
         self.__K = K
 
     cpdef runExperiment(self,
-                        Classifier classifier,
+                        Model classifier,
                         Parameter parameter,
                         CrossValidation crossValidation):
         """

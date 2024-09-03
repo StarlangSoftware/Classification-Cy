@@ -1,5 +1,5 @@
 from Sampling.CrossValidation cimport CrossValidation
-from Classification.Classifier.Classifier cimport Classifier
+from Classification.Model.Model cimport Model
 from Classification.Experiment.Experiment cimport Experiment
 from Classification.Experiment.KFoldRun cimport KFoldRun
 from Classification.InstanceList.InstanceList cimport InstanceList
@@ -9,6 +9,6 @@ from Classification.Performance.ExperimentPerformance cimport ExperimentPerforma
 
 cdef class KFoldRunSeparateTest(KFoldRun):
 
-    cpdef runExperimentSeparate(self, Classifier classifier, Parameter parameter, ExperimentPerformance experimentPerformance,
+    cpdef runExperimentSeparate(self, Model classifier, Parameter parameter, ExperimentPerformance experimentPerformance,
                       CrossValidation crossValidation, InstanceList testSet)
     cpdef ExperimentPerformance execute(self, Experiment experiment)
