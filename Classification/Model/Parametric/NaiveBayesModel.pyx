@@ -33,12 +33,6 @@ cdef class NaiveBayesModel(GaussianModel):
         self.__class_attribute_distributions = None
         inputFile.close()
 
-    def __init__(self, priorDistribution: object = None):
-        if isinstance(priorDistribution, DiscreteDistribution):
-            self.constructor1(priorDistribution)
-        elif isinstance(priorDistribution, str):
-            self.constructor2(priorDistribution)
-
     cpdef initForContinuous(self,
                             dict classMeans,
                             dict classDeviations):

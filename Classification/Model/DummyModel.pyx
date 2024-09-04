@@ -28,12 +28,6 @@ cdef class DummyModel(Model):
         self.distribution = Model.loadClassDistribution(inputFile)
         inputFile.close()
 
-    def __init__(self, trainSet: object = None):
-        if isinstance(trainSet, InstanceList):
-            self.constructor1(trainSet)
-        elif isinstance(trainSet, str):
-            self.constructor2(trainSet)
-
     cpdef str predict(self, Instance instance):
         """
         The predict method takes an Instance as an input and returns the entry of distribution which has the maximum

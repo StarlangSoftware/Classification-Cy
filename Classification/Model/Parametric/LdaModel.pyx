@@ -39,16 +39,6 @@ cdef class LdaModel(GaussianModel):
         self.loadWandW0(inputFile, size)
         inputFile.close()
 
-    def __init__(self,
-                 priorDistribution: object = None,
-                 w: dict = None,
-                 w0: dict = None):
-        if priorDistribution is not None:
-            if isinstance(priorDistribution, DiscreteDistribution):
-                self.constructor1(priorDistribution, w, w0)
-            elif isinstance(priorDistribution, str):
-                self.constructor2(priorDistribution)
-
     cpdef loadWandW0(self, object inputFile, int size):
         """
         Loads w0 and w hash maps from an input file. The number of items in the hash map is given by the parameter size.

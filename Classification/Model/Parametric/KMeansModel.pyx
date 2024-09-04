@@ -36,15 +36,6 @@ cdef class KMeansModel(GaussianModel):
         self.__class_means = self.loadInstanceList(inputFile)
         inputFile.close()
 
-    def __init__(self,
-                 priorDistribution: object = None,
-                 classMeans: InstanceList = None,
-                 distanceMetric: DistanceMetric = None):
-        if isinstance(priorDistribution, DiscreteDistribution):
-            self.constructor1(priorDistribution, classMeans, distanceMetric)
-        elif isinstance(priorDistribution, str):
-            self.constructor2(priorDistribution)
-
     cpdef double calculateMetric(self, Instance instance, str Ci):
         """
         The calculateMetric method takes an {@link Instance} and a String as inputs. It loops through the class means,
