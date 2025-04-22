@@ -640,4 +640,4 @@ cdef class InstanceList(object):
         frequencies = CounterHashMap()
         for label in classLabels:
             frequencies.put(label)
-        return frequencies.max()
+        return frequencies.maxItem()
