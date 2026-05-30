@@ -54,7 +54,7 @@ You can also see [Python](https://github.com/starlangsoftware/Classification-Py)
 
 ## Requirements
 
-* [Python 3.7 or higher](#python)
+* [Python 3.9 or higher](#python)
 * [Git](#git)
 
 ### Python 
@@ -71,7 +71,7 @@ Install the [latest version of Git](https://git-scm.com/book/en/v2/Getting-Start
 
 ## Pip Install
 
-	pip3 install NlpToolkit-Classification-Cy
+	pip3.9 install NlpToolkit-Classification-Cy
 
 ## Download Code
 
